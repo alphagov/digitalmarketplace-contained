@@ -12,9 +12,9 @@ The goal of this project is to be able to run the Digitalmarketplace web service
 
 ## Caveats
 
-This is not for a production environment.
+This is not for production use.
 
-If this is run on the public Internet (e.g. on GOV.UK PaaS), the website should be password protected at the very least, also to avoid search engines indexing its content
+If this is run on the public Internet (e.g. on GOV.UK PaaS), it should be password protected at the very least, also to avoid search engines indexing its content
 
 ## Architecture
 
