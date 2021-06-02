@@ -8,7 +8,8 @@ def stand_up_redis():
     pass
 
 def clone_apps():
-
+    # nothing to do here for now:
+    # the host is responsible for cloning the apps and mounting them onto the container
     pass
 
 def start_apps():
