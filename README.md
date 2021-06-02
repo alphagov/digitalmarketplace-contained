@@ -30,11 +30,12 @@ The Docker container will run all the apps and backend services. The apps code w
 
 * Run the container: `docker run -it --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`
 
-At this point you'll be in an interactive shell within the container, which is good in this initial development stage.
+* Once inside the container, run `/usr/local/python3 setup.py`  (this step will need to be made automatic)
 
 ## TODO
 
 * Must have's
+  * Clean up the code
   * Have this running w/o Elasticsearch and S3
   * Add implementation for Elasticsearch
   * Add implementation for S3
