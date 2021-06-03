@@ -15,7 +15,6 @@ def clone_apps():
 def start_apps():
 
     import yaml
-    import subprocess
     import os
 
     cwd = os.getcwd()
@@ -37,9 +36,8 @@ def start_apps():
 
                 bootstrapCommand = repositorySettings.get("bootstrap")
                 runCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
-                frontendCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
 
-                print(f'> Setting up: {repositoryName} | bootstrap command: {bootstrapCommand} | run command: {runCommand}')
+                _display_status_banner(f'>>> Setting up: {repositoryName} | bootstrap command: {bootstrapCommand} | run command: {runCommand}')
 
                 appCodeDirectory = f'{cwd}/../mount/apps-github-repos/{repositoryName}'
 
@@ -47,16 +45,17 @@ def start_apps():
                 if not os.path.isdir(appCodeDirectory):
                     appCodeDirectory = f'{cwd}/../mount-for-container/apps-github-repos/{repositoryName}'
 
-                print(f'++ {appCodeDirectory}')
+                _run_shell_command("rm -rf venv", appCodeDirectory)
+                _run_shell_command("rm -rf node_modules/", appCodeDirectory)
 
-                subprocess.run("rm -rf venv", cwd=appCodeDirectory, shell=True, check=True)
+                _run_shell_command(bootstrapCommand, appCodeDirectory)
 
-                subprocess.run(bootstrapCommand, cwd=appCodeDirectory, shell=True, check=True)
+                # these lines seem not be needed as the bootstrapCommand take care of it
+                # frontendCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
+                # if frontendCommand is not None: subprocess.run(frontendCommand, cwd=appCodeDirectory, shell=True, check=True)
 
-                #this line may not be needed as the bootstrapCommand take care of it
-                if frontendCommand is not None: subprocess.run(frontendCommand, cwd=appCodeDirectory, shell=True, check=True)
-
-                subprocess.run(runCommand, cwd=appCodeDirectory, shell=True, check=True)
+                # skip for now
+                # _run_shell_command(runCommand, appCodeDirectory)
 
         except yaml.YAMLError as exc:
             print(exc)
@@ -68,3 +67,14 @@ def start_apps():
 def stand_up_nginx():
     # TODO copy nginx config
     pass
+
+def _run_shell_command(command, workingDirectory):
+    import subprocess
+    _display_status_banner(f'Running command: {command}')
+    subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
+    pass
+
+def _display_status_banner(statusText):
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+    print(statusText)
+    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
