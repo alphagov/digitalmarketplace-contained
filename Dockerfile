@@ -1,4 +1,4 @@
-FROM ubuntu:21.04
+FROM python:3.6-slim-buster
 
 RUN mkdir /dmp-contained
 
@@ -6,27 +6,17 @@ COPY ./files-for-container /dmp-contained/files
 
 RUN apt-get update -y
 
-ARG export DEBIAN_FRONTEND=noninteractive # needed this otherwise install git would have been interactive
-RUN apt-get install -y -qq git
+# from DMp base image https://github.com/alphagov/digitalmarketplace-docker-base/blob/main/base.docker
+RUN /usr/bin/apt-get install -y --no-install-recommends nginx gcc curl xz-utils git \
+        libpcre3-dev libpq-dev libffi-dev libxml2-dev libxslt-dev libssl-dev zlib1g-dev
 
-RUN apt-get install -y python3
-RUN apt-get install -y python3-dev
-RUN apt-get install -y python3-venv
-RUN apt-get install -y pip
 
-RUN apt-get install -y build-essential # needed as we compile some of the packages (e.g. node packages)
-RUN apt-get install -y libssl-dev libffi-dev # needed for cffi
-
-ENV NODE_VERSION=14.7.0
-RUN apt install -y curl
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-ENV NVM_DIR=/root/.nvm
-RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
-RUN node --version
-RUN npm --version
+# from DMp frontend image https://github.com/alphagov/digitalmarketplace-docker-base/blob/main/frontend.docker
+ENV DEP_NODE_VERSION 14.16.1
+RUN /usr/bin/curl -SLO "https://nodejs.org/dist/v${DEP_NODE_VERSION}/node-v${DEP_NODE_VERSION}-linux-x64.tar.xz" && \
+    test $(sha256sum node-v${DEP_NODE_VERSION}-linux-x64.tar.xz | cut -d " " -f 1) = 85a89d2f68855282c87851c882d4c4bbea4cd7f888f603722f0240a6e53d89df && \
+    /bin/tar -xJf "node-v${DEP_NODE_VERSION}-linux-x64.tar.xz" -C /usr/local --strip-components=1 && \
+    /bin/rm "node-v${DEP_NODE_VERSION}-linux-x64.tar.xz"
 
 RUN apt-get install -y postgresql postgresql-contrib
 
@@ -34,8 +24,8 @@ RUN apt-get install -y nginx-full
 
 RUN apt-get install -y redis-server
 
-RUN cd /dmp-contained/files && pip install -r requirements.in
-
 WORKDIR /dmp-contained/files
+
+RUN pip install -r requirements.in
 
 # RUN /usr/bin/python3 setup.py
