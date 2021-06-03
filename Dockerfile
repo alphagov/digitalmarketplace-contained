@@ -28,4 +28,4 @@ WORKDIR /dmp-contained/files
 
 RUN pip install -r requirements.in
 
-# RUN /usr/bin/python3 setup.py
+# CMD ["/usr/local/bin/python3.6", "setup.py"]
