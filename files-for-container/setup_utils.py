@@ -30,6 +30,11 @@ def start_apps():
             #print(settings["repositories"])
 
             for repositoryName, repositorySettings in settings["repositories"].items():
+
+                # temporary hack so that I can run only one app for now
+                if repositoryName != 'digitalmarketplace-buyer-frontend':
+                    continue
+
                 bootstrapCommand = repositorySettings.get("bootstrap")
                 runCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
                 frontendCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
@@ -52,11 +57,6 @@ def start_apps():
                 if frontendCommand is not None: subprocess.run(frontendCommand, cwd=appCodeDirectory, shell=True, check=True)
 
                 subprocess.run(runCommand, cwd=appCodeDirectory, shell=True, check=True)
-
-
-                # let's try with the first repo only first
-                # TODO remove "break" to start other repositories
-                break
 
         except yaml.YAMLError as exc:
             print(exc)
