@@ -1,5 +1,9 @@
 FROM python:3.6-slim-buster
 
+EXPOSE 80
+
+USER root
+
 RUN mkdir /dmp-contained
 
 COPY ./files-for-container /dmp-contained/files
@@ -23,6 +27,9 @@ RUN apt-get install -y postgresql postgresql-contrib
 RUN apt-get install -y nginx-full
 
 RUN apt-get install -y redis-server
+
+# TODO remove this line - it is just to install tools for experimenting
+RUN apt-get install -y vim net-tools telnet iproute2
 
 WORKDIR /dmp-contained/files
 

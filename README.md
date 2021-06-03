@@ -28,7 +28,7 @@ The Docker container will run all the apps and backend services. The apps code w
 
 * Build the container: `docker build -t dmp-contained .`
 
-* Run the container: `docker run -it --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`. This is going to open up a shell on the container
+* Run the container: `docker run -it -p 80:80 --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`. This is going to open up a shell on the container
 
 * In the container, run `/usr/local/bin/python3.6 setup.py`
 

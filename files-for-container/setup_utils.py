@@ -41,7 +41,7 @@ def start_apps():
 
                 appCodeDirectory = f'{cwd}/../mount/apps-github-repos/{repositoryName}'
 
-                # this is a hack to make my local tests easier
+                # this is a hack to make my local tests easier (TODO remove)
                 if not os.path.isdir(appCodeDirectory):
                     appCodeDirectory = f'{cwd}/../mount-for-container/apps-github-repos/{repositoryName}'
 
@@ -54,8 +54,9 @@ def start_apps():
                 # frontendCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
                 # if frontendCommand is not None: subprocess.run(frontendCommand, cwd=appCodeDirectory, shell=True, check=True)
 
-                # skip for now
-                # _run_shell_command(runCommand, appCodeDirectory)
+                _run_shell_command(runCommand, appCodeDirectory)
+                # next line to be removed (TODO)
+                # FLASK_APP=application  FLASK_ENV=development python -m flask run --port={port} --host=0.0.0.0
 
         except yaml.YAMLError as exc:
             print(exc)
@@ -65,8 +66,8 @@ def start_apps():
     pass
 
 def stand_up_nginx():
-    # TODO copy nginx config
-    pass
+    _run_shell_command("cp nginx.conf /etc/nginx/", cwd)
+    _run_shell_command("/etc/init.d/nginx start", cwd)
 
 def _run_shell_command(command, workingDirectory):
     import subprocess
