@@ -24,13 +24,13 @@ The Docker container will run all the apps and backend services. The apps code w
 
 * Clone this repo
 
-* Clone the apps' Github repos into mount-for-container/apps-github-repos
+* Clone the apps' Github repos into mount-for-container/apps-github-repos (if you are using dm-runner you could just copy the "code" directory over)
 
 * Build the container: `docker build -t dmp-contained .`
 
-* Run the container: `docker run -it --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`
+* Run the container: `docker run -it --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`. This is going to open up a shell on the container
 
-* Once inside the container, run `/usr/local/python3 setup.py`  (this step will need to be made automatic)
+* In the container, run `/usr/local/python3 setup.py`
 
 ## TODO
 
@@ -41,6 +41,8 @@ The Docker container will run all the apps and backend services. The apps code w
   * Add implementation for S3
 * Nice to have's
   * big
+    * Make the step of running the `setup.py` automatic.
+      * I really wanted to add this as last step of the Dockerfile (`CMD /usr/local/python3 setup.py`) however the problem was that the setup script needs the `mount-for-container` folder to be mounted but that can't be done in the Dockerfile. There must be a proper solution/pattern for this. Maybe worth asking a Docker expert.
     * Is Ubuntu the best distro for this?
     * Change the versions of the dependencies to match more closely production
     * Change setup behaviour so that if the apps Github repos are not found in the mounted volume, they will be cloned by the container - this should make it easier to standup the full environment for prototyping
