@@ -16,9 +16,7 @@ def start_apps():
 
     import yaml
     import os
-
     cwd = os.getcwd()
-    print(cwd)
 
 
     with open("settings.yml", 'r') as stream:
@@ -66,6 +64,8 @@ def start_apps():
     pass
 
 def stand_up_nginx():
+    import os
+    cwd = os.getcwd()
     _run_shell_command("cp nginx.conf /etc/nginx/", cwd)
     _run_shell_command("/etc/init.d/nginx start", cwd)
 
