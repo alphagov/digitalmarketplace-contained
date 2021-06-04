@@ -4,8 +4,10 @@ import subprocess
 
 class SetupRunner:
 
-        def __init__(self):
-            pass
+
+
+        def __init__(self, dryRun):
+            self.dryRun = dryRun;
 
         def start(self):
 
@@ -50,15 +52,15 @@ class SetupRunner:
                         if not os.path.isdir(appCodeDirectory):
                             appCodeDirectory = f'{cwd}/../mount-for-container/apps-github-repos/{repositoryName}'
 
-                        SetupRunner._run_shell_command("rm -rf venv", appCodeDirectory)
-                        SetupRunner._run_shell_command("rm -rf node_modules/", appCodeDirectory)
-                        SetupRunner._run_shell_command(bootstrapCommand, appCodeDirectory)
+                        self._run_shell_command("rm -rf venv", appCodeDirectory)
+                        self._run_shell_command("rm -rf node_modules/", appCodeDirectory)
+                        self._run_shell_command(bootstrapCommand, appCodeDirectory)
 
                         # these lines seem not be needed as the bootstrapCommand take care of it
                         # frontendCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
                         # if frontendCommand is not None: subprocess.run(frontendCommand, cwd=appCodeDirectory, shell=True, check=True)
 
-                        SetupRunner._run_shell_command(runCommand, appCodeDirectory)
+                        self._run_shell_command(runCommand, appCodeDirectory)
                         # next line to be removed (TODO)
                         # FLASK_APP=application  FLASK_ENV=development python -m flask run --port={port} --host=0.0.0.0
 
@@ -67,13 +69,13 @@ class SetupRunner:
 
         def stand_up_nginx(self):
             cwd = os.getcwd()
-            SetupRunner._run_shell_command("cp nginx.conf /etc/nginx/", cwd)
-            SetupRunner._run_shell_command("/etc/init.d/nginx start", cwd)
+            self._run_shell_command("cp nginx.conf /etc/nginx/", cwd)
+            self._run_shell_command("/etc/init.d/nginx start", cwd)
 
-        @staticmethod
-        def _run_shell_command(command, workingDirectory):
+        def _run_shell_command(self, command, workingDirectory):
             SetupRunner._display_status_banner(f'Running command: {command}')
-            subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
+            if not self.dryRun:
+                subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
 
         @staticmethod
         def _display_status_banner(statusText):

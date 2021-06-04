@@ -33,6 +33,8 @@ The apps are run via the built-in Flask web server (each app listens on a differ
 * Run the container: `docker run -it -p 80:80 --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`. This is going to open up a shell on the container
 
 * In the container, run `/usr/local/bin/python3.6 setup.py`
+  * actually, you could run this as part of the previous step, but let's keep simple for now)
+  * the `--dry-run` flag is supported. Use `--help` for more info
 
 When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a DMp webpage (or most likely a Flask error page from the container).
 
