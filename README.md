@@ -64,4 +64,5 @@ After those points are completed, look at the TODO section below and please sear
     * Change the versions of the dependencies to match more closely production
     * Change setup behaviour so that if the apps Github repos are not found in the mounted volume, they will be cloned by the container - this should make it easier to standup the full environment for prototyping
   * small
+    * add Python typing
     * settings.yml is a direct copy of the one in `dmp-runner` - remove anything that is not needed

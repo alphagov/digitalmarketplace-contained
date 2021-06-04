@@ -1,5 +1,3 @@
-from typing import Any, Dict, Iterable, List, Optional, Set, Sequence, Tuple, cast
-
 import yaml
 import os
 import subprocess
@@ -33,7 +31,7 @@ class SetupRunner:
 
             with open("settings.yml", 'r') as stream:
                 try:
-                    settings: dict = yaml.safe_load(stream)
+                    settings = yaml.safe_load(stream)
 
                     for repositoryName, repositorySettings in settings["repositories"].items():
 
