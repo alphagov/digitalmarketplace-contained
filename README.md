@@ -58,6 +58,7 @@ After those points are completed, look at the TODO section below and please sear
   * Add implementation for Elasticsearch
   * Add implementation for S3
   * Ensure we can run automated tests against the environment
+  * If we want to run this on GOV.UK PaaS, we will probably need to override [this env variable](https://github.com/alphagov/digitalmarketplace-buyer-frontend/blob/a716f8113af6c90f61fdf4da6b7baa3c3de2bf0c/config.py#L39) otherwise all redirects would bring the user to localhost
 * Nice to have's
   * big
     * Add automated regression tests
