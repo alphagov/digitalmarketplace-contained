@@ -23,9 +23,6 @@ def start_apps():
         try:
             settings: dict = yaml.safe_load(stream)
 
-            #print(type(settings["repositories"]))
-            #print(settings["repositories"])
-
             for repositoryName, repositorySettings in settings["repositories"].items():
 
                 # temporary hack so that I can run only one app for now
