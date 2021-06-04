@@ -1,78 +1,90 @@
-def stand_up_postgres():
-    pass
+from typing import Any, Dict, Iterable, List, Optional, Set, Sequence, Tuple, cast
 
-def import_clean_data():
-    pass
+class SetupRunner:
 
-def stand_up_redis():
-    pass
+        def __init__(self):
+            print("Init")
 
-def clone_apps():
-    # nothing to do here for now:
-    # the host is responsible for cloning the apps and mounting them onto the container
-    pass
-
-def start_apps():
-
-    import yaml
-    import os
-    cwd = os.getcwd()
+        def start(self):
+            self.stand_up_nginx()
+            self.stand_up_postgres()
+            self.import_clean_data()
+            self.stand_up_redis()
+            self.start_apps()
 
 
-    with open("settings.yml", 'r') as stream:
-        try:
-            settings: dict = yaml.safe_load(stream)
+        def stand_up_postgres(self):
+            pass
 
-            for repositoryName, repositorySettings in settings["repositories"].items():
+        def import_clean_data(self):
+            pass
 
-                # temporary hack so that I can run only one app for now
-                if repositoryName != 'digitalmarketplace-buyer-frontend':
-                    continue
+        def stand_up_redis(self):
+            pass
 
-                bootstrapCommand = repositorySettings.get("bootstrap")
-                runCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
+        def start_apps(self):
 
-                _display_status_banner(f'>>> Setting up: {repositoryName} | bootstrap command: {bootstrapCommand} | run command: {runCommand}')
+            import yaml
+            import os
+            cwd = os.getcwd()
 
-                appCodeDirectory = f'{cwd}/../mount/apps-github-repos/{repositoryName}'
 
-                # this is a hack to make my local tests easier (TODO remove)
-                if not os.path.isdir(appCodeDirectory):
-                    appCodeDirectory = f'{cwd}/../mount-for-container/apps-github-repos/{repositoryName}'
+            with open("settings.yml", 'r') as stream:
+                try:
+                    settings: dict = yaml.safe_load(stream)
 
-                _run_shell_command("rm -rf venv", appCodeDirectory)
-                _run_shell_command("rm -rf node_modules/", appCodeDirectory)
+                    for repositoryName, repositorySettings in settings["repositories"].items():
 
-                _run_shell_command(bootstrapCommand, appCodeDirectory)
+                        # temporary hack so that I can run only one app for now
+                        if repositoryName != 'digitalmarketplace-buyer-frontend':
+                            continue
 
-                # these lines seem not be needed as the bootstrapCommand take care of it
-                # frontendCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
-                # if frontendCommand is not None: subprocess.run(frontendCommand, cwd=appCodeDirectory, shell=True, check=True)
+                        bootstrapCommand = repositorySettings.get("bootstrap")
+                        runCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
 
-                _run_shell_command(runCommand, appCodeDirectory)
-                # next line to be removed (TODO)
-                # FLASK_APP=application  FLASK_ENV=development python -m flask run --port={port} --host=0.0.0.0
+                        SetupRunner._display_status_banner(f'>>> Setting up: {repositoryName} | bootstrap command: {bootstrapCommand} | run command: {runCommand}')
 
-        except yaml.YAMLError as exc:
-            print(exc)
+                        appCodeDirectory = f'{cwd}/../mount/apps-github-repos/{repositoryName}'
 
-    # TODO ensure apps can connect to postgres
-    # TODO ensure apps can connect to redis
-    pass
+                        # this is a hack to make my local tests easier (TODO remove)
+                        if not os.path.isdir(appCodeDirectory):
+                            appCodeDirectory = f'{cwd}/../mount-for-container/apps-github-repos/{repositoryName}'
 
-def stand_up_nginx():
-    import os
-    cwd = os.getcwd()
-    _run_shell_command("cp nginx.conf /etc/nginx/", cwd)
-    _run_shell_command("/etc/init.d/nginx start", cwd)
+                        SetupRunner._run_shell_command("rm -rf venv", appCodeDirectory)
+                        SetupRunner._run_shell_command("rm -rf node_modules/", appCodeDirectory)
 
-def _run_shell_command(command, workingDirectory):
-    import subprocess
-    _display_status_banner(f'Running command: {command}')
-    subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
-    pass
+                        SetupRunner._run_shell_command(bootstrapCommand, appCodeDirectory)
 
-def _display_status_banner(statusText):
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-    print(statusText)
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                        # these lines seem not be needed as the bootstrapCommand take care of it
+                        # frontendCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
+                        # if frontendCommand is not None: subprocess.run(frontendCommand, cwd=appCodeDirectory, shell=True, check=True)
+
+                        SetupRunner._run_shell_command(runCommand, appCodeDirectory)
+                        # next line to be removed (TODO)
+                        # FLASK_APP=application  FLASK_ENV=development python -m flask run --port={port} --host=0.0.0.0
+
+                except yaml.YAMLError as exc:
+                    print(exc)
+
+            # TODO ensure apps can connect to postgres
+            # TODO ensure apps can connect to redis
+            pass
+
+        def stand_up_nginx(self):
+            import os
+            cwd = os.getcwd()
+            SetupRunner._run_shell_command("cp nginx.conf /etc/nginx/", cwd)
+            SetupRunner._run_shell_command("/etc/init.d/nginx start", cwd)
+
+        @staticmethod
+        def _run_shell_command(command, workingDirectory):
+            import subprocess
+            SetupRunner._display_status_banner(f'Running command: {command}')
+            # subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
+            pass
+
+        @staticmethod
+        def _display_status_banner(statusText):
+            print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+            print(statusText)
+            print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
