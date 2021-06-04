@@ -7,9 +7,12 @@ import subprocess
 class SetupRunner:
 
         def __init__(self):
-            print("Init")
+            pass
 
         def start(self):
+
+            SetupRunner._display_status_banner("Starting setup...")
+
             self.stand_up_nginx()
             self.stand_up_postgres()
             self.import_clean_data()
