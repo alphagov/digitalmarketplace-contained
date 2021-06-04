@@ -1,11 +1,12 @@
 import yaml
 import os
 import subprocess
+from typing import Any, Dict, Iterable, List, Optional, Set, Sequence, Tuple, cast
 
 class SetupRunner:
 
-        def __init__(self, dryRun):
-            self.dryRun = dryRun;
+        def __init__(self, dry_run: bool):
+            self.dry_run = dry_run;
             SetupRunner.__display_status_banner("Starting setup...")
 
         def run_all_tasks(self):
@@ -29,20 +30,21 @@ class SetupRunner:
 
             with open("settings.yml", 'r') as stream:
                 try:
-                    settings = yaml.safe_load(stream)
+                    settings: dict = yaml.safe_load(stream)
 
+                    repository_name: str
                     for repository_name, repository_settings in settings["repositories"].items():
 
                         # temporary hack so that I can run only one app for now
                         if repository_name != 'digitalmarketplace-buyer-frontend':
                             continue
 
-                        bootstrap_command = repository_settings.get("bootstrap")
-                        run_command = repository_settings.get("commands").get("run") if repository_settings.get("commands") is not None else None
+                        bootstrap_command: str = repository_settings.get("bootstrap")
+                        run_command: str = repository_settings.get("commands").get("run") if repository_settings.get("commands") is not None else None
 
                         SetupRunner.__display_status_banner(f'>>> Setting up: {repository_name} | bootstrap command: {bootstrap_command} | run command: {run_command}')
 
-                        app_code_directory = f'{cwd}/../mount/apps-github-repos/{repository_name}'
+                        app_code_directory: str = f'{cwd}/../mount/apps-github-repos/{repository_name}'
 
                         # this is a hack to make my local tests easier (TODO remove)
                         if not os.path.isdir(app_code_directory):
@@ -68,13 +70,13 @@ class SetupRunner:
             self.__run_shell_command("cp nginx.conf /etc/nginx/", cwd)
             self.__run_shell_command("/etc/init.d/nginx start", cwd)
 
-        def __run_shell_command(self, command, workingDirectory):
+        def __run_shell_command(self, command: str, workingDirectory: str):
             SetupRunner.__display_status_banner(f'Running command: {command}')
-            if not self.dryRun:
+            if not self.dry_run:
                 subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
 
         @staticmethod
-        def __display_status_banner(status_text):
+        def __display_status_banner(status_text: str):
             print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
             print(status_text)
             print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
