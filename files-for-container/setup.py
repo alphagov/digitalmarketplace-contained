@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from setup_runner import SetupRunner;
+from setup_runner import SetupRunner
 
 parser = ArgumentParser()
 parser.add_argument("--dry-run",
@@ -7,4 +7,4 @@ parser.add_argument("--dry-run",
                     help="don't run actual shell commands")
 args = parser.parse_args()
 
-SetupRunner(args.dry_run).run_all_tasks();
+SetupRunner(args.dry_run).run_all_tasks()
