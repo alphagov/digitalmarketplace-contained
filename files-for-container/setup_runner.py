@@ -45,7 +45,7 @@ class SetupRunner:
                         bootstrap_command: str = repository_settings.get("bootstrap")
                         run_command: str = repository_settings.get("commands").get("run") if repository_settings.get("commands") is not None else None
 
-                        SetupRunner.__display_status_banner(f'>>> Setting up: {repository_name} | bootstrap command: {bootstrap_command} | run command: {run_command}')
+                        SetupRunner.__display_status_banner(f'Setting up: {repository_name} | bootstrap command: {bootstrap_command} | run command: {run_command}')
 
                         app_code_directory: str = f'{cwd}/../mount/apps-github-repos/{repository_name}'
 
@@ -80,6 +80,5 @@ class SetupRunner:
 
         @staticmethod
         def __display_status_banner(status_text: str):
-            print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
             print (f'%s%s%s {status_text} %s' % (fg('white'), bg('blue'), attr(1), attr(0)))
-            print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+            print('%s%s%s -------------------------------------------------------------------------------------- %s' % (fg('white'), bg('blue'), attr(1), attr(0)))
