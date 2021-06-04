@@ -1,5 +1,9 @@
 from typing import Any, Dict, Iterable, List, Optional, Set, Sequence, Tuple, cast
 
+import yaml
+import os
+import subprocess
+
 class SetupRunner:
 
         def __init__(self):
@@ -12,7 +16,6 @@ class SetupRunner:
             self.stand_up_redis()
             self.start_apps()
 
-
         def stand_up_postgres(self):
             pass
 
@@ -23,11 +26,7 @@ class SetupRunner:
             pass
 
         def start_apps(self):
-
-            import yaml
-            import os
             cwd = os.getcwd()
-
 
             with open("settings.yml", 'r') as stream:
                 try:
@@ -52,7 +51,6 @@ class SetupRunner:
 
                         SetupRunner._run_shell_command("rm -rf venv", appCodeDirectory)
                         SetupRunner._run_shell_command("rm -rf node_modules/", appCodeDirectory)
-
                         SetupRunner._run_shell_command(bootstrapCommand, appCodeDirectory)
 
                         # these lines seem not be needed as the bootstrapCommand take care of it
@@ -66,22 +64,15 @@ class SetupRunner:
                 except yaml.YAMLError as exc:
                     print(exc)
 
-            # TODO ensure apps can connect to postgres
-            # TODO ensure apps can connect to redis
-            pass
-
         def stand_up_nginx(self):
-            import os
             cwd = os.getcwd()
             SetupRunner._run_shell_command("cp nginx.conf /etc/nginx/", cwd)
             SetupRunner._run_shell_command("/etc/init.d/nginx start", cwd)
 
         @staticmethod
         def _run_shell_command(command, workingDirectory):
-            import subprocess
             SetupRunner._display_status_banner(f'Running command: {command}')
-            # subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
-            pass
+            subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
 
         @staticmethod
         def _display_status_banner(statusText):
