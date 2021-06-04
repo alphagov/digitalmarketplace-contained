@@ -4,15 +4,11 @@ import subprocess
 
 class SetupRunner:
 
-
-
         def __init__(self, dryRun):
             self.dryRun = dryRun;
-
-        def start(self):
-
             SetupRunner._display_status_banner("Starting setup...")
 
+        def run_all_tasks(self):
             self.stand_up_nginx()
             self.stand_up_postgres()
             self.import_clean_data()
@@ -35,32 +31,32 @@ class SetupRunner:
                 try:
                     settings = yaml.safe_load(stream)
 
-                    for repositoryName, repositorySettings in settings["repositories"].items():
+                    for repository_name, repository_settings in settings["repositories"].items():
 
                         # temporary hack so that I can run only one app for now
-                        if repositoryName != 'digitalmarketplace-buyer-frontend':
+                        if repository_name != 'digitalmarketplace-buyer-frontend':
                             continue
 
-                        bootstrapCommand = repositorySettings.get("bootstrap")
-                        runCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
+                        bootstrap_command = repository_settings.get("bootstrap")
+                        run_command = repository_settings.get("commands").get("run") if repository_settings.get("commands") is not None else None
 
-                        SetupRunner._display_status_banner(f'>>> Setting up: {repositoryName} | bootstrap command: {bootstrapCommand} | run command: {runCommand}')
+                        SetupRunner._display_status_banner(f'>>> Setting up: {repository_name} | bootstrap command: {bootstrap_command} | run command: {run_command}')
 
-                        appCodeDirectory = f'{cwd}/../mount/apps-github-repos/{repositoryName}'
+                        app_code_directory = f'{cwd}/../mount/apps-github-repos/{repository_name}'
 
                         # this is a hack to make my local tests easier (TODO remove)
-                        if not os.path.isdir(appCodeDirectory):
-                            appCodeDirectory = f'{cwd}/../mount-for-container/apps-github-repos/{repositoryName}'
+                        if not os.path.isdir(app_code_directory):
+                            app_code_directory = f'{cwd}/../mount-for-container/apps-github-repos/{repository_name}'
 
-                        self._run_shell_command("rm -rf venv", appCodeDirectory)
-                        self._run_shell_command("rm -rf node_modules/", appCodeDirectory)
-                        self._run_shell_command(bootstrapCommand, appCodeDirectory)
+                        self._run_shell_command("rm -rf venv", app_code_directory)
+                        self._run_shell_command("rm -rf node_modules/", app_code_directory)
+                        self._run_shell_command(bootstrap_command, app_code_directory)
 
                         # these lines seem not be needed as the bootstrapCommand take care of it
                         # frontendCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
                         # if frontendCommand is not None: subprocess.run(frontendCommand, cwd=appCodeDirectory, shell=True, check=True)
 
-                        self._run_shell_command(runCommand, appCodeDirectory)
+                        self._run_shell_command(run_command, app_code_directory)
                         # next line to be removed (TODO)
                         # FLASK_APP=application  FLASK_ENV=development python -m flask run --port={port} --host=0.0.0.0
 
@@ -78,7 +74,7 @@ class SetupRunner:
                 subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
 
         @staticmethod
-        def _display_status_banner(statusText):
+        def _display_status_banner(status_text):
             print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-            print(statusText)
+            print(status_text)
             print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
