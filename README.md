@@ -55,8 +55,10 @@ After those points are completed, look at the TODO section below and please sear
   * Review how we can make the container more observable and easier to troubleshoot any problem during setup
   * Add implementation for Elasticsearch
   * Add implementation for S3
+  * Ensure we can run automated tests against the environment
 * Nice to have's
   * big
+    * Add automated regression tests
     * Make the step of running the `setup.py` automatic.
       * I really wanted to add this as last step of the Dockerfile (`CMD /usr/local/python3 setup.py`) however the problem was that the setup script needs the `mount-for-container` folder to be mounted but that can't be done in the Dockerfile. There must be a proper solution/pattern for this. Maybe worth asking a Docker expert.
     * Change the versions of the dependencies to match more closely production
