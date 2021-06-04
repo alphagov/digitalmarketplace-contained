@@ -1,12 +1,15 @@
-import yaml
 import os
 import subprocess
 from typing import Any, Dict, Iterable, List, Optional, Set, Sequence, Tuple, cast
 
+from colored import fg, bg, attr
+import yaml
+
+
 class SetupRunner:
 
         def __init__(self, dry_run: bool):
-            self.dry_run = dry_run;
+            self.dry_run = dry_run
             SetupRunner.__display_status_banner("Starting setup...")
 
         def run_all_tasks(self):
@@ -71,12 +74,12 @@ class SetupRunner:
             self.__run_shell_command("/etc/init.d/nginx start", cwd)
 
         def __run_shell_command(self, command: str, workingDirectory: str):
-            SetupRunner.__display_status_banner(f'Running command: {command}')
+            print (f'%s%s Running command: {command} %s' % (fg('white'), bg('green'), attr(0)))
             if not self.dry_run:
                 subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
 
         @staticmethod
         def __display_status_banner(status_text: str):
             print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-            print(status_text)
+            print (f'%s%s%s {status_text} %s' % (fg('white'), bg('blue'), attr(1), attr(0)))
             print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')

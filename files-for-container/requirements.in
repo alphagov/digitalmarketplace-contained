@@ -1,4 +1,5 @@
 argparse
+colored
 dataclasses
 digitalmarketplace-developer-tools
 invoke
