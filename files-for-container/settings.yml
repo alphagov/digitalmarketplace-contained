@@ -1,3 +1,4 @@
+# Adapted from dmrunner https://github.com/alphagov/digitalmarketplace-runner/blob/main/config/settings.yml
 # This file contains mostly-static data that doesn't need to be edited by the end-user but shouldn't be embedded in
 # code directly.
 
