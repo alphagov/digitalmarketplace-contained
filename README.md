@@ -42,11 +42,14 @@ When this script ends you should be able to hit `http://localhost` from your bro
 For now, only the buyer-frontend is available (via nginx) but erroring because there is no api.
 
 Next few steps
+- quick things for next: introduce constants for the main class, introduce constants for start_apps method, use the sort order when looping through repos' settings
+- make repo public
 - stand up api app (as a way to also discover how to run two apps in parallel - probably the container will need more resources, and processes may need to be launched in a detatched way so if they fail, they don't block the rest of the setup, or would we rather want the whole setup to fail?)
 - stand up postgres
 - import clean data
 - stand up redis
 - stand up all other apps
+- deploy the container onto GOV.UK PaaS using Github Actions
 
 After those points are completed, look at the TODO section below and please search for "TODO" text scattered in the files.
 
