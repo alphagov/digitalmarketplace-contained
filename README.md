@@ -18,7 +18,7 @@ If this is run on the public Internet (e.g. on GOV.UK PaaS), it should be passwo
 
 ## Architecture
 
-The Docker container will run all the apps and backend services. The apps code will be mounted in the container so that the code can be changed on the host, and changes should be reflected in the container.
+The single Docker container runs all the apps and backend services. The apps code is mounted onto the container so that when the code is changed on the host, those changes are reflected in the container.
 
 The apps are run via the built-in Flask web server (each app listens on a different port) while nginx, redis and postgres are run as services on the container (no Docker-in-docker).
 
@@ -33,10 +33,10 @@ The apps are run via the built-in Flask web server (each app listens on a differ
 * Run the container: `docker run -it -p 80:80 --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`. This is going to open up a shell on the container
 
 * In the container, run `/usr/local/bin/python3.6 setup.py`
-  * actually, you could run this as part of the previous step, but let's keep simple for now)
   * the `--dry-run` flag is supported. Use `--help` for more info
+  * actually, you could run this as part of the previous step, but let's keep simple for now
 
-When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a DMp webpage (or most likely a Flask error page from the container).
+When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a DMp webpage (or most likely a Flask error page from the container at this stage of development).
 
 ## Next steps
 For now, only the buyer-frontend is available (via nginx) but erroring because there is no api.
