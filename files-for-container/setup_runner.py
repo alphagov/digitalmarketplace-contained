@@ -71,11 +71,13 @@ class SetupRunner:
                     print(exc)
 
         def stand_up_nginx(self):
-            cwd = os.getcwd()
-            self.__run_shell_command("cp nginx.conf /etc/nginx/", cwd)
-            self.__run_shell_command("/etc/init.d/nginx start", cwd)
+            self.__run_shell_command("cp nginx.conf /etc/nginx/")
+            self.__run_shell_command("/etc/init.d/nginx start")
 
-        def __run_shell_command(self, command: str, workingDirectory: str):
+        def __run_shell_command(self, command: str, workingDirectory: str = None):
+            if workingDirectory is None: workingDirectory = os.getcwd()
+            if not os.path.isdir(workingDirectory):
+                raise OSError(f'Working directory {workingDirectory} not found; unable to run shell command.')
             print (f'%s%s Running command: {command} %s' % (fg('white'), bg('green'), attr(0)))
             if not self.dry_run:
                 subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
