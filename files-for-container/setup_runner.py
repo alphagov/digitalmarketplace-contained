@@ -10,6 +10,12 @@ class SetupRunner:
 
         def __init__(self, dry_run: bool):
             self.dry_run = dry_run
+
+            self.apps_code_directory: str = f'{os.getcwd()}/../mount/apps-github-repos'
+            # this is a hack to make my local tests easier (TODO remove)
+            if not os.path.isdir(self.apps_code_directory):
+                self.apps_code_directory = f'{os.getcwd()}/../mount-for-container/apps-github-repos'
+
             SetupRunner.__display_status_banner("Starting setup...")
 
         def run_all_tasks(self):
@@ -47,11 +53,7 @@ class SetupRunner:
 
                         SetupRunner.__display_status_banner(f'Setting up app: {repository_name} ( bootstrap command: {bootstrap_command} | run command: {run_command} )')
 
-                        app_code_directory: str = f'{cwd}/../mount/apps-github-repos/{repository_name}'
-
-                        # this is a hack to make my local tests easier (TODO remove)
-                        if not os.path.isdir(app_code_directory):
-                            app_code_directory = f'{cwd}/../mount-for-container/apps-github-repos/{repository_name}'
+                        app_code_directory: str = f'{self.apps_code_directory}/{repository_name}'
 
                         self.__run_shell_command("rm -rf venv", app_code_directory)
                         self.__run_shell_command("rm -rf node_modules/", app_code_directory)
