@@ -11,12 +11,12 @@ class SetupRunner:
         def __init__(self, dry_run: bool):
             self.dry_run = dry_run
 
-            self.apps_code_directory: str = f'{os.getcwd()}/../mount/apps-github-repos'
+            self.apps_code_directory: str = f"{os.getcwd()}/../mount/apps-github-repos"
             # this is a hack to make my local tests easier (TODO remove)
             if not os.path.isdir(self.apps_code_directory):
-                self.apps_code_directory = f'{os.getcwd()}/../mount-for-container/apps-github-repos'
+                self.apps_code_directory = f"{os.getcwd()}/../mount-for-container/apps-github-repos"
 
-            SetupRunner.__display_status_banner("Starting setup...")
+            SetupRunner.__display_status_banner("SETUP STARTED")
 
         def run_all_tasks(self):
             self.stand_up_nginx()
@@ -37,23 +37,23 @@ class SetupRunner:
         def start_apps(self):
             cwd = os.getcwd()
 
-            with open("settings.yml", 'r') as stream:
+            with open('settings.yml', 'r') as stream:
                 try:
                     settings: dict = yaml.safe_load(stream)
 
                     repository_name: str
-                    for repository_name, repository_settings in settings["repositories"].items():
+                    for repository_name, repository_settings in settings['repositories'].items():
 
                         # temporary hack so that I can run only one app for now
                         if repository_name != 'digitalmarketplace-buyer-frontend':
                             continue
 
-                        bootstrap_command: str = repository_settings.get("bootstrap")
-                        run_command: str = repository_settings.get("commands").get("run") if repository_settings.get("commands") is not None else None
+                        bootstrap_command: str = repository_settings.get('bootstrap')
+                        run_command: str = repository_settings.get('commands').get('run') if repository_settings.get('commands') is not None else None
 
-                        SetupRunner.__display_status_banner(f'Setting up app: {repository_name} ( bootstrap command: {bootstrap_command} | run command: {run_command} )')
+                        SetupRunner.__display_status_banner(f"Launching app: {repository_name} ( bootstrap command: {bootstrap_command} | run command: {run_command} )")
 
-                        app_code_directory: str = f'{self.apps_code_directory}/{repository_name}'
+                        app_code_directory: str = f"{self.apps_code_directory}/{repository_name}"
 
                         self.__run_shell_command("rm -rf venv", app_code_directory)
                         self.__run_shell_command("rm -rf node_modules/", app_code_directory)
@@ -71,18 +71,19 @@ class SetupRunner:
                     print(exc)
 
         def stand_up_nginx(self):
+            SetupRunner.__display_status_banner("Starting nginx...")
             self.__run_shell_command("cp nginx.conf /etc/nginx/")
             self.__run_shell_command("/etc/init.d/nginx start")
 
         def __run_shell_command(self, command: str, workingDirectory: str = None):
             if workingDirectory is None: workingDirectory = os.getcwd()
             if not os.path.isdir(workingDirectory):
-                raise OSError(f'Working directory {workingDirectory} not found; unable to run shell command.')
-            print (f'%s%s Running command: {command} %s' % (fg('white'), bg('green'), attr(0)))
+                raise OSError(f"Working directory {workingDirectory} not found; unable to run shell command.")
+            print (f"%s%s Running command: {command} %s" % (fg('white'), bg('green'), attr(0)))
             if not self.dry_run:
                 subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
 
         @staticmethod
         def __display_status_banner(status_text: str):
-            print (f'%s%s%s {status_text} %s' % (fg('white'), bg('blue'), attr(1), attr(0)))
-            print('%s%s%s -------------------------------------------------------------------------------------- %s' % (fg('white'), bg('blue'), attr(1), attr(0)))
+            print (f"%s%s%s {status_text} %s" % (fg('white'), bg('blue'), attr(1), attr(0)))
+            print("%s%s%s -------------------------------------------------------------------------------------- %s" % (fg('white'), bg('blue'), attr(1), attr(0)))
