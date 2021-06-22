@@ -16,7 +16,7 @@ class SetupRunner:
             if not os.path.isdir(self.apps_code_directory):
                 self.apps_code_directory = f"{os.getcwd()}/../mount-for-container/apps-github-repos"
 
-            SetupRunner.__display_status_banner("SETUP STARTED")
+            SetupRunner._display_status_banner("SETUP STARTED")
 
         def run_all_tasks(self):
             self.stand_up_nginx()
@@ -51,19 +51,19 @@ class SetupRunner:
                         bootstrap_command: str = repository_settings.get('bootstrap')
                         run_command: str = repository_settings.get('commands').get('run') if repository_settings.get('commands') is not None else None
 
-                        SetupRunner.__display_status_banner(f"Launching app: {repository_name} ( bootstrap command: {bootstrap_command} | run command: {run_command} )")
+                        SetupRunner._display_status_banner(f"Launching app: {repository_name} ( bootstrap command: {bootstrap_command} | run command: {run_command} )")
 
                         app_code_directory: str = f"{self.apps_code_directory}/{repository_name}"
 
-                        self.__run_shell_command("rm -rf venv", app_code_directory)
-                        self.__run_shell_command("rm -rf node_modules/", app_code_directory)
-                        self.__run_shell_command(bootstrap_command, app_code_directory)
+                        self._run_shell_command("rm -rf venv", app_code_directory)
+                        self._run_shell_command("rm -rf node_modules/", app_code_directory)
+                        self._run_shell_command(bootstrap_command, app_code_directory)
 
                         # these lines seem not be needed as the bootstrapCommand take care of it
                         # frontendCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
                         # if frontendCommand is not None: subprocess.run(frontendCommand, cwd=appCodeDirectory, shell=True, check=True)
 
-                        self.__run_shell_command(run_command, app_code_directory)
+                        self._run_shell_command(run_command, app_code_directory)
                         # next line to be removed (TODO)
                         # FLASK_APP=application  FLASK_ENV=development python -m flask run --port={port} --host=0.0.0.0
 
@@ -71,11 +71,11 @@ class SetupRunner:
                     print(exc)
 
         def stand_up_nginx(self):
-            SetupRunner.__display_status_banner("Starting nginx...")
-            self.__run_shell_command("cp nginx.conf /etc/nginx/")
-            self.__run_shell_command("/etc/init.d/nginx start")
+            SetupRunner._display_status_banner("Starting nginx...")
+            self._run_shell_command("cp nginx.conf /etc/nginx/")
+            self._run_shell_command("/etc/init.d/nginx start")
 
-        def __run_shell_command(self, command: str, workingDirectory: str = None):
+        def _run_shell_command(self, command: str, workingDirectory: str = None):
             if workingDirectory is None: workingDirectory = os.getcwd()
             if not os.path.isdir(workingDirectory):
                 raise OSError(f"Working directory {workingDirectory} not found; unable to run shell command.")
@@ -84,6 +84,6 @@ class SetupRunner:
                 subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
 
         @staticmethod
-        def __display_status_banner(status_text: str):
+        def _display_status_banner(status_text: str):
             print (f"%s%s%s {status_text} %s" % (fg('white'), bg('blue'), attr(1), attr(0)))
             print("%s%s%s -------------------------------------------------------------------------------------- %s" % (fg('white'), bg('blue'), attr(1), attr(0)))
