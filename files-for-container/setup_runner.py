@@ -39,6 +39,10 @@ class SetupRunner:
 
             with open('settings.yml', 'r') as stream:
                 try:
+                    # In python 3.6+, it seems that dict loading order is preserved
+                    # (source: https://stackoverflow.com/questions/39980323/are-dictionaries-ordered-in-python-3-6)
+                    # Therefore, to keep things simple, we can ignore the 'run-order' attribute in the settings.yml file and imply the
+                    # order the apps are written down in the file is the right order for execution
                     settings: dict = yaml.safe_load(stream)
 
                     repository_name: str

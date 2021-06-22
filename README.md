@@ -42,7 +42,6 @@ When this script ends you should be able to hit `http://localhost` from your bro
 For now, only the buyer-frontend is available (via nginx) but erroring because there is no api.
 
 Next few steps
-- use the sort order when looping through repos' settings
 - make repo public
 - stand up api app (as a way to also discover how to run two apps in parallel - probably the container will need more resources, and processes may need to be launched in a detatched way so if they fail, they don't block the rest of the setup, or would we rather want the whole setup to fail?)
 - stand up postgres
@@ -54,7 +53,8 @@ Next few steps
 After those points are completed, look at the TODO section below and please search for "TODO" text scattered in the files.
 
 ## TODO
-
+* Quick refactoring / tidying up
+  * `settings.yml` is a direct copy of the one in `dmp-runner` - remove anything that is not needed, such as the `run-order` attribute as we don't rely on it anymore (do we need to make it clearer we launch apps in the order that are written down in settings.yml?)
 * Must have's
   * Clean up and refactor the code to make it very maintainable and easy-to-follow
   * Review how we can make the container more observable and easier to troubleshoot any problem during setup
@@ -70,5 +70,3 @@ After those points are completed, look at the TODO section below and please sear
       * I really wanted to add this as last step of the Dockerfile (`CMD /usr/local/python3 setup.py`) however the problem was that the setup script needs the `mount-for-container` folder to be mounted but that can't be done in the Dockerfile. There must be a proper solution/pattern for this. Maybe worth asking a Docker expert.
     * Change the versions of the dependencies to match more closely production
     * Change setup behaviour so that if the apps Github repos are not found in the mounted volume, they will be cloned by the container - this should make it easier to standup the full environment for prototyping
-  * small
-    * settings.yml is a direct copy of the one in `dmp-runner` - remove anything that is not needed
