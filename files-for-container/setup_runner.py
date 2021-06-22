@@ -48,8 +48,8 @@ class SetupRunner:
                     repository_name: str
                     for repository_name, repository_settings in settings['repositories'].items():
 
-                        # temporary hack so that I can run only one app for now
-                        if repository_name != 'digitalmarketplace-buyer-frontend':
+                        # temporary hack so that we can run apps selectively
+                        if repository_name not in ['digitalmarketplace-buyer-frontend']:
                             continue
 
                         bootstrap_command: str = repository_settings.get('bootstrap')
