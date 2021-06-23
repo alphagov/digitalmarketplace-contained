@@ -4,10 +4,6 @@ EXPOSE 80
 
 USER root
 
-RUN mkdir /dmp-contained
-
-COPY ./files-for-container /dmp-contained/files
-
 RUN apt-get update -y
 
 # from DMp base image https://github.com/alphagov/digitalmarketplace-docker-base/blob/main/base.docker
@@ -30,6 +26,10 @@ RUN apt-get install -y redis-server
 
 # TODO remove this line - it is just to install tools for experimenting
 RUN apt-get install -y vim net-tools telnet iproute2
+
+RUN mkdir /dmp-contained
+
+COPY ./files-for-container /dmp-contained/files
 
 WORKDIR /dmp-contained/files
 
