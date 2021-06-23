@@ -72,6 +72,7 @@ class SetupRunner:
                         # FLASK_APP=application  FLASK_ENV=development python -m flask run --port={port} --host=0.0.0.0
 
                 except yaml.YAMLError as exc:
+                    # TODO this exception should probably be handled in a different way, e.g. exiting with a status code
                     print(exc)
 
         def stand_up_nginx(self):

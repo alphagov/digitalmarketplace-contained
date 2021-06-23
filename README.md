@@ -2,13 +2,22 @@
 
 ** EXPERIMENTAL / UNDER DEVELOPMENT **
 
-## Requirements
 
-Docker
+## Motivations and vision
+
+Anybody in a multidisciplinary team should be able to explore the service without depending on others.
+This is not the exact case in our team: developers are required when colleagues would like to check out the service having a procurement framework in a state different from the one available to our users.
+
+The vision for this project is to have a very simple setup of the service so that anybody in the team, at any time, could spin up an ephemeral instance of the service (loaded with test data) and explore what the service looks like at different states of the frameworks life-cycle.
+
+That being the main intent, this project could also be useful to developers, architects and others for doing development and testing in a simplified environment that is easy to stand up.
+
+Finally, having a (relatively) easy and inexpensive way of setting up an environment could open up new possibilities.
 
 ## Goal
 
-The goal of this project is to be able to run the Digitalmarketplace web service on a single Docker container for development, testing and prototyping purposes.
+The goal of this project is to be able to run the Digitalmarketplace web service on a single Docker container for exploration, prototyping, development and testing purposes.
+
 
 ## Caveats
 
@@ -16,17 +25,27 @@ This is not for production use.
 
 If this is run on the public Internet (e.g. on GOV.UK PaaS), it should be password protected at the very least, also to avoid search engines indexing its content
 
+
 ## Architecture
+
+The architecture priorities simplicity and economy of setup above other factors.
 
 The single Docker container runs all the apps and backend services. The apps code is mounted onto the container so that when the code is changed on the host, those changes are reflected in the container.
 
 The apps are run via the built-in Flask web server (each app listens on a different port) while nginx, redis and postgres are run as services on the container (no Docker-in-docker).
+The drawback of running the backend services not as individual containers is that it will be more difficult to pin their versions to the ones used on production (as here we rely on the packages available for the single Docker image).
+
+
+## Requirements
+
+Docker
+
 
 ## How to run this project
 
 * Clone this repo
 
-* Clone the apps' Github repos into mount-for-container/apps-github-repos (if you are using dm-runner you could just copy the "code" directory over)
+* Clone the apps' Github repos into mount-for-container/apps-github-repos (if you are using dm-runner you could just copy the `code` directory over)
 
 * Build the container: `docker build -t dmp-contained .`
 
@@ -38,16 +57,16 @@ The apps are run via the built-in Flask web server (each app listens on a differ
 
 When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a DMp webpage (or most likely a Flask error page from the container at this stage of development).
 
+
 ## Next steps
 For now, only the buyer-frontend is available (via nginx) but erroring because there is no api.
 
 Next few steps
-- make repo public
-- stand up api app (as a way to also discover how to run two apps in parallel - probably the container will need more resources, and processes may need to be launched in a detatched way so if they fail, they don't block the rest of the setup, or would we rather want the whole setup to fail?)
 - stand up postgres
-- import clean data
+- import test data
+- stand up the api app - validate this chain of communications is working well: buyer-frontend -> api -> postgres
 - stand up redis
-- stand up all other apps
+- stand up all other apps - at this point the service should run without major issues (apart from when file management and search are involved)
 - deploy the container onto GOV.UK PaaS using Github Actions
 
 After those points are completed, look at the TODO section below and please search for "TODO" text scattered in the files.
@@ -61,7 +80,6 @@ After those points are completed, look at the TODO section below and please sear
   * Add implementation for Elasticsearch
   * Add implementation for S3
   * Ensure we can run automated tests against the environment
-  * If we want to run this on GOV.UK PaaS, we will probably need to override [this env variable](https://github.com/alphagov/digitalmarketplace-buyer-frontend/blob/a716f8113af6c90f61fdf4da6b7baa3c3de2bf0c/config.py#L39) otherwise all redirects would bring the user to localhost
 * Nice to have's
   * big
     * Add automated regression tests
