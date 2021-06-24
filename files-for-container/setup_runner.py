@@ -87,6 +87,7 @@ class SetupRunner:
                 raise OSError(f"Working directory {workingDirectory} not found; unable to run shell command.")
             print (f"%s%s Running command: {command} %s" % (fg('white'), bg('green'), attr(0)))
             if not self.dry_run:
+                # TODO command should be a list to prevent command injection attacks
                 subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
 
         @staticmethod
