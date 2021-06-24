@@ -26,7 +26,8 @@ class SetupRunner:
             self.start_apps()
 
         def stand_up_postgres(self):
-            pass
+            SetupRunner._display_status_banner("Starting postgres...")
+            self._run_shell_command("pg_ctlcluster 11 main restart")
 
         def import_clean_data(self):
             pass
