@@ -32,10 +32,18 @@ class SetupRunner:
 
     def stand_up_postgres(self):
         SetupRunner._display_status_banner("Starting postgres...")
+        self._run_shell_command("""sed -i 's/peer/trust/g' /etc/postgresql/11/main/pg_hba.conf &&
+                                   sed -i 's/md5/trust/g' /etc/postgresql/11/main/pg_hba.conf""")
         self._run_shell_command("pg_ctlcluster 11 main restart")
 
     def import_clean_data(self):
-        pass
+        SetupRunner._display_status_banner("Initialising postgres with test data...")
+        POSTGRES_USER = "postgres"
+
+        self._run_shell_command(f'psql --user {POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace;"')
+        self._run_shell_command(f'psql --user {POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace_test;"')
+        #TODO confirm whether creating the digitalmarketplace_test db is necessary
+
 
     def stand_up_redis(self):
         pass

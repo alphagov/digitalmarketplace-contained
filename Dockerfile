@@ -27,14 +27,6 @@ RUN apt-get install -y redis-server
 # TODO remove this line - it is just to install tools for experimenting
 RUN apt-get install -y vim net-tools telnet iproute2
 
-ARG POSTGRES_USER=postgres
-
-RUN sed -i 's/peer/trust/g' /etc/postgresql/11/main/pg_hba.conf && sed -i 's/md5/trust/g' /etc/postgresql/11/main/pg_hba.conf
-
-RUN pg_ctlcluster 11 main restart && \
-    psql --user ${POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace;" && \
-    psql --user ${POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace_test;"
-
 RUN mkdir /dmp-contained
 
 COPY ./files-for-container /dmp-contained/files
