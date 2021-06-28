@@ -13,8 +13,9 @@ class SetupRunner:
 
         script_directory = os.path.abspath(os.path.dirname(__file__))
 
-        self.apps_code_directory: str = \
-            f"{script_directory}/../{'mount' if not use_host_paths else 'mount-for-container'}/apps-github-repos"
+        self.mount_directory: str = \
+            f"{script_directory}/../{'mount' if not use_host_paths else 'mount-for-container'}"
+        self.apps_code_directory: str = f"{self.mount_directory}/apps-github-repos"
         self.files_directory: str = \
             f"{script_directory}/../{'files' if not use_host_paths else 'files-for-container'}"
 
@@ -44,6 +45,9 @@ class SetupRunner:
         self._run_shell_command(f'psql --user {POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace_test;"')
         #TODO confirm whether creating the digitalmarketplace_test db is necessary
 
+        test_data_dump_filepath: str = self.mount_directory + "/test_data.sql"
+        #TODO raise error if test data file is not found
+        self._run_shell_command(f'psql --user {POSTGRES_USER} -d digitalmarketplace -f {test_data_dump_filepath}')
 
     def stand_up_redis(self):
         pass
