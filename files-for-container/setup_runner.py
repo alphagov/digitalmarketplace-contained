@@ -13,8 +13,13 @@ class SetupRunner:
 
         script_directory = os.path.abspath(os.path.dirname(__file__))
 
-        self.apps_code_directory: str = f"{script_directory}/../{'mount' if not use_host_paths else 'mount-for-container'}/apps-github-repos"
-        self.files_directory: str = f"{script_directory}/../{'files' if not use_host_paths else 'files-for-container'}"
+        self.apps_code_directory: str = \
+            f"{script_directory}/../{'mount' if not use_host_paths else 'mount-for-container'}/apps-github-repos"
+        self.files_directory: str = \
+            f"{script_directory}/../{'files' if not use_host_paths else 'files-for-container'}"
+
+        #TODO raise error if app_code_directory does not exist
+        #TODO raise error if files_directory does not exist
 
         SetupRunner._display_status_banner("SETUP STARTED")
 
@@ -43,7 +48,7 @@ class SetupRunner:
                 # In python 3.6+, it seems that dict loading order is preserved
                 # (source: https://stackoverflow.com/questions/39980323/are-dictionaries-ordered-in-python-3-6)
                 # Therefore, to keep things simple, we can ignore the 'run-order' attribute in the settings.yml file and imply the
-                # order the apps are written down in the file is the right order for execution
+                # order the apps are listed in the file is the right order for execution
                 settings: dict = yaml.safe_load(stream)
 
                 repository_name: str
