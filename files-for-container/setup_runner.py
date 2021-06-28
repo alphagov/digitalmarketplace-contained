@@ -8,13 +8,13 @@ import yaml
 
 class SetupRunner:
 
-        def __init__(self, dry_run: bool):
+        def __init__(self, dry_run: bool, use_host_paths: bool):
             self.dry_run = dry_run
 
-            self.apps_code_directory: str = f"{os.getcwd()}/../mount/apps-github-repos"
-            # this is a hack to make my local tests easier (TODO remove)
-            if not os.path.isdir(self.apps_code_directory):
-                self.apps_code_directory = f"{os.getcwd()}/../mount-for-container/apps-github-repos"
+            script_directory = os.path.abspath(os.path.dirname(__file__))
+
+            self.apps_code_directory: str = f"{script_directory}/../{'mount' if not use_host_paths else 'mount-for-container'}/apps-github-repos"
+            self.files_directory: str = f"{script_directory}/../{'files' if not use_host_paths else 'files-for-container'}"
 
             SetupRunner._display_status_banner("SETUP STARTED")
 
@@ -38,7 +38,7 @@ class SetupRunner:
         def start_apps(self):
             cwd = os.getcwd()
 
-            with open('settings.yml', 'r') as stream:
+            with open(f"{self.files_directory}/settings.yml", 'r') as stream:
                 try:
                     # In python 3.6+, it seems that dict loading order is preserved
                     # (source: https://stackoverflow.com/questions/39980323/are-dictionaries-ordered-in-python-3-6)
