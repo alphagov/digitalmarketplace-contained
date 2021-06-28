@@ -85,7 +85,7 @@ class SetupRunner:
             if workingDirectory is None: workingDirectory = os.getcwd()
             if not os.path.isdir(workingDirectory):
                 raise OSError(f"Working directory {workingDirectory} not found; unable to run shell command.")
-            print (f"%s%s Running command: {command} %s" % (fg('white'), bg('green'), attr(0)))
+            print (f"%s%s > Running command: {command} %s" % (fg('white'), bg('green'), attr(0)))
             if not self.dry_run:
                 # TODO command should be a list to prevent command injection attacks
                 subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
@@ -93,4 +93,3 @@ class SetupRunner:
         @staticmethod
         def _display_status_banner(status_text: str):
             print (f"%s%s%s {status_text} %s" % (fg('white'), bg('blue'), attr(1), attr(0)))
-            print("%s%s%s -------------------------------------------------------------------------------------- %s" % (fg('white'), bg('blue'), attr(1), attr(0)))
