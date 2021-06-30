@@ -33,8 +33,8 @@ class SetupRunner:
 
     def stand_up_postgres(self):
         SetupRunner._display_status_banner("Starting postgres...")
-        self._run_shell_command("""sed -i 's/peer/trust/g' /etc/postgresql/11/main/pg_hba.conf &&
-                                   sed -i 's/md5/trust/g' /etc/postgresql/11/main/pg_hba.conf""")
+        self._run_shell_command("sed -i 's/peer/trust/g' /etc/postgresql/11/main/pg_hba.conf")
+        self._run_shell_command("sed -i 's/md5/trust/g' /etc/postgresql/11/main/pg_hba.conf")
         self._run_shell_command("pg_ctlcluster 11 main restart")
 
     def initialise_postgres_with_test_data(self):
