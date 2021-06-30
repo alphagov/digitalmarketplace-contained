@@ -1,6 +1,5 @@
 import os
 import subprocess
-from typing import Any, Dict, Iterable, List, Optional, Set, Sequence, Tuple, cast
 
 from colored import fg, bg, attr
 import yaml
@@ -19,8 +18,8 @@ class SetupRunner:
         self.files_directory: str = \
             f"{script_directory}/../{'files' if not use_host_paths else 'files-for-container'}"
 
-        #TODO raise error if app_code_directory does not exist
-        #TODO raise error if files_directory does not exist
+        # TODO raise error if app_code_directory does not exist
+        # TODO raise error if files_directory does not exist
 
         SetupRunner._display_status_banner("SETUP STARTED")
 
@@ -39,28 +38,27 @@ class SetupRunner:
 
     def initialise_postgres_with_test_data(self):
         SetupRunner._display_status_banner("Initialising postgres with test data...")
-        POSTGRES_USER = "postgres"
+        postgres_user = "postgres"
 
-        self._run_shell_command(f'psql --user {POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace;"')
-        self._run_shell_command(f'psql --user {POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace_test;"')
-        #TODO confirm whether creating the digitalmarketplace_test db is necessary
+        self._run_shell_command(f'psql --user {postgres_user} --command "CREATE DATABASE digitalmarketplace;"')
+        self._run_shell_command(f'psql --user {postgres_user} --command "CREATE DATABASE digitalmarketplace_test;"')
+        # TODO confirm whether creating the digitalmarketplace_test db is necessary
 
         test_data_dump_filepath: str = self.mount_directory + "/test_data.sql"
-        #TODO raise error if test data file is not found
-        self._run_shell_command(f'psql --user {POSTGRES_USER} --dbname digitalmarketplace --file {test_data_dump_filepath}')
+        # TODO raise error if test data file is not found
+        self._run_shell_command(
+            f'psql --user {postgres_user} --dbname digitalmarketplace --file {test_data_dump_filepath}')
 
     def stand_up_redis(self):
         pass
 
     def start_apps(self):
-        cwd = os.getcwd()
-
         with open(f"{self.files_directory}/settings.yml", 'r') as stream:
             try:
-                # In python 3.6+, it seems that dict loading order is preserved
-                # (source: https://stackoverflow.com/questions/39980323/are-dictionaries-ordered-in-python-3-6)
-                # Therefore, to keep things simple, we can ignore the 'run-order' attribute in the settings.yml file and imply the
-                # order the apps are listed in the file is the right order for execution
+                # In python 3.6+, it seems that dict loading order is preserved (source:
+                # https://stackoverflow.com/questions/39980323/are-dictionaries-ordered-in-python-3-6) Therefore,
+                # to keep things simple, we can ignore the 'run-order' attribute in the settings.yml file and imply
+                # the order the apps are listed in the file is the right order for execution
                 settings: dict = yaml.safe_load(stream)
 
                 repository_name: str
@@ -74,22 +72,14 @@ class SetupRunner:
                     run_command: str = repository_settings.get('commands').get('run') if repository_settings.get(
                         'commands') is not None else None
 
-                    SetupRunner._display_status_banner(
-                        f"Launching app: {repository_name} ( bootstrap command: {bootstrap_command} | run command: {run_command} )")
+                    SetupRunner._display_status_banner(f"Launching app: {repository_name}")
 
                     app_code_directory: str = f"{self.apps_code_directory}/{repository_name}"
 
                     self._run_shell_command("rm -rf venv", app_code_directory)
                     self._run_shell_command("rm -rf node_modules/", app_code_directory)
                     self._run_shell_command(bootstrap_command, app_code_directory)
-
-                    # these lines seem not be needed as the bootstrapCommand take care of it
-                    # frontendCommand = repositorySettings.get("commands").get("run") if repositorySettings.get("commands") is not None else None
-                    # if frontendCommand is not None: subprocess.run(frontendCommand, cwd=appCodeDirectory, shell=True, check=True)
-
                     self._run_shell_command(run_command, app_code_directory)
-                    # next line to be removed (TODO)
-                    # FLASK_APP=application  FLASK_ENV=development python -m flask run --port={port} --host=0.0.0.0
 
             except yaml.YAMLError as exc:
                 # TODO this exception should probably be handled in a different way, e.g. exiting with a status code
@@ -100,14 +90,15 @@ class SetupRunner:
         self._run_shell_command("cp nginx.conf /etc/nginx/")
         self._run_shell_command("/etc/init.d/nginx start")
 
-    def _run_shell_command(self, command: str, workingDirectory: str = None):
-        if workingDirectory is None: workingDirectory = os.getcwd()
-        if not os.path.isdir(workingDirectory):
-            raise OSError(f"Working directory {workingDirectory} not found; unable to run shell command.")
+    def _run_shell_command(self, command: str, working_directory: str = None):
+        if working_directory is None:
+            working_directory: str = os.getcwd()
+        if not os.path.isdir(working_directory):
+            raise OSError(f"Working directory {working_directory} not found; unable to run shell command.")
         print(f"%s%s > Running command: {command} %s" % (fg('white'), bg('green'), attr(0)))
         if not self.dry_run:
             # TODO command should be a list to prevent command injection attacks
-            subprocess.run(command, cwd=workingDirectory, shell=True, check=True)
+            subprocess.run(command, cwd=working_directory, shell=True, check=True)
 
     @staticmethod
     def _display_status_banner(status_text: str):
