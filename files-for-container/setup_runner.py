@@ -47,7 +47,7 @@ class SetupRunner:
 
         test_data_dump_filepath: str = self.mount_directory + "/test_data.sql"
         #TODO raise error if test data file is not found
-        self._run_shell_command(f'psql --user {POSTGRES_USER} -d digitalmarketplace -f {test_data_dump_filepath}')
+        self._run_shell_command(f'psql --user {POSTGRES_USER} --dbname digitalmarketplace --file {test_data_dump_filepath}')
 
     def stand_up_redis(self):
         pass
