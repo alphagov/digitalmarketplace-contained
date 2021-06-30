@@ -47,6 +47,8 @@ Docker
 
 * Clone the apps' Github repos into mount-for-container/apps-github-repos (if you are using dm-runner you could just copy the `code` directory over)
 
+* In the `mount-for-container` folder, add a file `test_data.sql` containing the SQL statements to initialise the database.
+
 * Build the container: `docker build -t dmp-contained .`
 
 * Run the container: `docker run --rm --name dmp-contained -it -p 80:80 --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`. This is going to open up a shell on the container

@@ -13,8 +13,9 @@ class SetupRunner:
 
         script_directory = os.path.abspath(os.path.dirname(__file__))
 
-        self.apps_code_directory: str = \
-            f"{script_directory}/../{'mount' if not use_host_paths else 'mount-for-container'}/apps-github-repos"
+        self.mount_directory: str = \
+            f"{script_directory}/../{'mount' if not use_host_paths else 'mount-for-container'}"
+        self.apps_code_directory: str = f"{self.mount_directory}/apps-github-repos"
         self.files_directory: str = \
             f"{script_directory}/../{'files' if not use_host_paths else 'files-for-container'}"
 
@@ -26,16 +27,27 @@ class SetupRunner:
     def run_all_tasks(self):
         self.stand_up_nginx()
         self.stand_up_postgres()
-        self.import_clean_data()
+        self.initialise_postgres_with_test_data()
         self.stand_up_redis()
         self.start_apps()
 
     def stand_up_postgres(self):
         SetupRunner._display_status_banner("Starting postgres...")
+        self._run_shell_command("sed -i 's/peer/trust/g' /etc/postgresql/11/main/pg_hba.conf")
+        self._run_shell_command("sed -i 's/md5/trust/g' /etc/postgresql/11/main/pg_hba.conf")
         self._run_shell_command("pg_ctlcluster 11 main restart")
 
-    def import_clean_data(self):
-        pass
+    def initialise_postgres_with_test_data(self):
+        SetupRunner._display_status_banner("Initialising postgres with test data...")
+        POSTGRES_USER = "postgres"
+
+        self._run_shell_command(f'psql --user {POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace;"')
+        self._run_shell_command(f'psql --user {POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace_test;"')
+        #TODO confirm whether creating the digitalmarketplace_test db is necessary
+
+        test_data_dump_filepath: str = self.mount_directory + "/test_data.sql"
+        #TODO raise error if test data file is not found
+        self._run_shell_command(f'psql --user {POSTGRES_USER} --dbname digitalmarketplace --file {test_data_dump_filepath}')
 
     def stand_up_redis(self):
         pass

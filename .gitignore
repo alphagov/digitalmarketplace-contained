@@ -4,3 +4,11 @@
 # Python
 venv/
 __pycache__/
+
+# project
+mount-for-container/test_data.sql
+
+# not necessary but probably a good idea to avoid unwanted commits
+*.sql
+*.sql.*
+*.log
