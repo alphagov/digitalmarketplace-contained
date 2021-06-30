@@ -5,3 +5,4 @@ digitalmarketplace-developer-tools
 invoke
 redis
 pyyaml
+flake8
