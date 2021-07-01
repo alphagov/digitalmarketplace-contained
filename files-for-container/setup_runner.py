@@ -79,13 +79,15 @@ class SetupRunner:
                     run_command: str = repository_settings.get('commands').get('run') if repository_settings.get(
                         'commands') is not None else None
 
-                    SetupRunner._display_status_banner(f"Launching app: {repository_name}")
+                    SetupRunner._display_status_banner(f"Preparing to launch app: {repository_name}")
 
                     app_code_directory: str = f"{self.apps_code_directory}/{repository_name}"
 
                     self._run_shell_command("rm -rf venv", app_code_directory)
                     self._run_shell_command("rm -rf node_modules/", app_code_directory)
                     self._run_shell_command(bootstrap_command, app_code_directory)
+
+                    SetupRunner._display_status_banner(f"Launching app: {repository_name}")
                     self._run_shell_command(run_command, app_code_directory)
 
             except yaml.YAMLError as exc:
