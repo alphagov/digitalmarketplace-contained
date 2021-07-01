@@ -51,7 +51,7 @@ Docker
 
 * Build the container: `docker build -t dmp-contained .`
 
-* Run the container: `docker run --rm --name dmp-contained -it -p 80:80 --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`. This is going to open up a shell on the container
+* Run the container: `docker run --init --rm --name dmp-contained -it -p 80:80 --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`. This is going to open up a shell on the container
 
 * In the container, run `/usr/local/bin/python3.6 setup.py`
   * the `--dry-run` flag is supported. Use `--help` for more info
