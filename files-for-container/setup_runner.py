@@ -44,6 +44,13 @@ class SetupRunner:
         self._run_shell_command(f'psql --user {postgres_user} --command "CREATE DATABASE digitalmarketplace_test;"')
         # TODO confirm whether creating the digitalmarketplace_test db is necessary
 
+        # The api app will try to log in into the db with the user of the current shell (that is, 'root') rather than
+        # 'postgres'
+        # There may be a workaround to that, however, given than this project is not meant to run on production,
+        # it is probably just easier to create a new superuser role 'root'.
+        self._run_shell_command(
+            f'psql --user {postgres_user} --command "CREATE ROLE root WITH LOGIN SUPERUSER;"')
+
         test_data_dump_filepath: str = self.mount_directory + "/test_data.sql"
         # TODO raise error if test data file is not found
         self._run_shell_command(
