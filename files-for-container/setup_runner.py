@@ -50,7 +50,7 @@ class SetupRunner:
             f'psql --user {postgres_user} --dbname digitalmarketplace --file {test_data_dump_filepath}')
 
     def stand_up_redis(self):
-        pass
+        self._run_shell_command("/etc/init.d/redis-server start")
 
     def start_apps(self):
         with open(f"{self.files_directory}/settings.yml", 'r') as stream:
