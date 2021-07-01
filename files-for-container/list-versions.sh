@@ -1,4 +1,6 @@
 #!/bin/bash
+# List languages and backend services versions
+
 python3 --version
 pip --version
 echo Node "$(node --version)"
