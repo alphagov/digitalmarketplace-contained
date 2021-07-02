@@ -48,6 +48,7 @@ class SetupRunner:
         # 'postgres'
         # There may be a workaround to that, however, given than this project is not meant to run on production,
         # it is probably just easier to create a new superuser role 'root'.
+        # TODO try to avoid to create a new user - shall we run the api as the postgres user, rather than root?
         self._run_shell_command(
             f'psql --user {postgres_user} --command "CREATE ROLE root WITH LOGIN SUPERUSER;"')
 
@@ -79,6 +80,8 @@ class SetupRunner:
 
                     self._run_shell_command("rm -rf venv", app_code_directory)
                     self._run_shell_command("rm -rf node_modules/", app_code_directory)
+                    # TODO change the following line so that we don't run a command coming from settings.yaml
+                    # to minimise risk of shell/command injection
                     self._run_shell_command(bootstrap_command, app_code_directory)
 
                     SetupRunner._display_status_banner(f"Launching app: {repository_name}")
