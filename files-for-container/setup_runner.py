@@ -44,6 +44,14 @@ class SetupRunner:
         self._run_shell_command(f'psql --user {postgres_user} --command "CREATE DATABASE digitalmarketplace_test;"')
         # TODO confirm whether creating the digitalmarketplace_test db is necessary
 
+        # The api app will try to log in into the db with the user of the current shell (that is, 'root') rather than
+        # 'postgres'
+        # There may be a workaround to that, however, given than this project is not meant to run on production,
+        # it is probably just easier to create a new superuser role 'root'.
+        # TODO try to avoid to create a new user - shall we run the api as the postgres user, rather than root?
+        self._run_shell_command(
+            f'psql --user {postgres_user} --command "CREATE ROLE root WITH LOGIN SUPERUSER;"')
+
         test_data_dump_filepath: str = self.mount_directory + "/test_data.sql"
         # TODO raise error if test data file is not found
         self._run_shell_command(
@@ -58,28 +66,28 @@ class SetupRunner:
                 # In python 3.6+, it seems that dict loading order is preserved (source:
                 # https://stackoverflow.com/questions/39980323/are-dictionaries-ordered-in-python-3-6) Therefore,
                 # to keep things simple, we can ignore the 'run-order' attribute in the settings.yml file and imply
-                # the order the apps are listed in the file is the right order for execution
+                # the order the apps as listed in the file is the right order for execution
                 settings: dict = yaml.safe_load(stream)
 
                 repository_name: str
                 for repository_name, repository_settings in settings['repositories'].items():
 
-                    # temporary hack so that we can run apps selectively
-                    if repository_name not in ['digitalmarketplace-buyer-frontend']:
-                        continue
-
                     bootstrap_command: str = repository_settings.get('bootstrap')
-                    run_command: str = repository_settings.get('commands').get('run') if repository_settings.get(
-                        'commands') is not None else None
 
-                    SetupRunner._display_status_banner(f"Launching app: {repository_name}")
+                    SetupRunner._display_status_banner(f"Preparing to launch app: {repository_name}")
 
                     app_code_directory: str = f"{self.apps_code_directory}/{repository_name}"
 
                     self._run_shell_command("rm -rf venv", app_code_directory)
                     self._run_shell_command("rm -rf node_modules/", app_code_directory)
+                    # TODO change the following line so that we don't run a command coming from settings.yaml
+                    # to minimise risk of shell/command injection
                     self._run_shell_command(bootstrap_command, app_code_directory)
-                    self._run_shell_command(run_command, app_code_directory)
+
+                    SetupRunner._display_status_banner(f"Launching app: {repository_name}")
+                    # We need to launch the next command in the background (by appending &) as it runs "forever",
+                    # otherwise the setup process would be blocked by it
+                    self._run_shell_command("invoke run-app &", app_code_directory)
 
             except yaml.YAMLError as exc:
                 # TODO this exception should probably be handled in a different way, e.g. exiting with a status code

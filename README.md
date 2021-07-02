@@ -51,7 +51,7 @@ Docker
 
 * Build the container: `docker build -t dmp-contained .`
 
-* Run the container: `docker run --rm --name dmp-contained -it -p 80:80 --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`. This is going to open up a shell on the container
+* Run the container: `docker run --init --rm --name dmp-contained -it -p 80:80 --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount dmp-contained /bin/bash`. This is going to open up a shell on the container
 
 * In the container, run `/usr/local/bin/python3.6 setup.py`
   * the `--dry-run` flag is supported. Use `--help` for more info
@@ -76,13 +76,14 @@ After those points are completed, look at the TODO section below and please sear
 ## TODO
 * Quick refactoring / tidying up
   * `settings.yml` is a direct copy of the one in `dmp-runner` - remove anything that is not needed, such as the `run-order` attribute as we don't rely on it anymore (do we need to make it clearer we launch apps in the order that are written down in settings.yml?)
-* Must have's
+* Must haves
+  * Protect the Github main branch and require review for integration
   * Clean up and refactor the code to make it very maintainable and easy-to-follow
   * Review how we can make the container more observable and easier to troubleshoot any problem during setup
   * Add implementation for Elasticsearch
   * Add implementation for S3
   * Ensure we can run automated tests against the environment
-* Nice to have's
+* Nice to haves
   * big
     * Add automated regression tests
     * Improve speed of the setup (e.g. caching, parallelisation)
