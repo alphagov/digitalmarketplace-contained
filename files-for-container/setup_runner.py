@@ -72,8 +72,6 @@ class SetupRunner:
                 for repository_name, repository_settings in settings['repositories'].items():
 
                     bootstrap_command: str = repository_settings.get('bootstrap')
-                    run_command: str = repository_settings.get('commands').get('run') if repository_settings.get(
-                        'commands') is not None else None
 
                     SetupRunner._display_status_banner(f"Preparing to launch app: {repository_name}")
 
@@ -84,7 +82,9 @@ class SetupRunner:
                     self._run_shell_command(bootstrap_command, app_code_directory)
 
                     SetupRunner._display_status_banner(f"Launching app: {repository_name}")
-                    self._run_shell_command(run_command, app_code_directory)
+                    # We need to launch the next command in the background (by appending &) as it runs "forever",
+                    # otherwise the setup process would be blocked by it
+                    self._run_shell_command("invoke run-app &", app_code_directory)
 
             except yaml.YAMLError as exc:
                 # TODO this exception should probably be handled in a different way, e.g. exiting with a status code
