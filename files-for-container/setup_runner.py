@@ -7,8 +7,9 @@ import yaml
 
 class SetupRunner:
 
-    def __init__(self, dry_run: bool, use_host_paths: bool):
+    def __init__(self, dry_run: bool, clear_venv_and_node_modules: bool, use_host_paths: bool):
         self.dry_run = dry_run
+        self.clear_venv_and_node_modules = clear_venv_and_node_modules;
 
         script_directory = os.path.abspath(os.path.dirname(__file__))
 
@@ -74,12 +75,15 @@ class SetupRunner:
 
                     bootstrap_command: str = repository_settings.get('bootstrap')
 
-                    SetupRunner._display_status_banner(f"Preparing to launch app: {repository_name}")
+                    SetupRunner._display_status_banner(f"Preparing app: {repository_name}")
 
                     app_code_directory: str = f"{self.apps_code_directory}/{repository_name}"
 
-                    self._run_shell_command("rm -rf venv", app_code_directory)
-                    self._run_shell_command("rm -rf node_modules/", app_code_directory)
+                    if self.clear_venv_and_node_modules:
+                        self._run_shell_command("rm -rf venv", app_code_directory)
+                        self._run_shell_command("rm -rf node_modules/", app_code_directory)
+
+
                     # TODO change the following line so that we don't run a command coming from settings.yaml
                     # to minimise risk of shell/command injection
                     self._run_shell_command(bootstrap_command, app_code_directory)

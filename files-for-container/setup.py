@@ -5,6 +5,10 @@ parser = ArgumentParser()
 parser.add_argument('--dry-run',
                     action='store_true', dest='dry_run', default=False,
                     help="Shell commands will not be run.")
+parser.add_argument('--clear-venv-and-node-modules',
+                    action='store_true', dest='clear_venv_and_node_modules', default=False,
+                    help="""Delete Python's virtual environment folder and
+                            Node's external modules cache folder.""")
 parser.add_argument('--use-host-paths',
                     action='store_true', dest='use_host_paths', default=False,
                     help="""Paths of the hosts will be used, that is 'mount-for-container' in place of 'mount' and
@@ -14,4 +18,4 @@ parser.add_argument('--use-host-paths',
 
 args = parser.parse_args()
 
-SetupRunner(args.dry_run, args.use_host_paths).run_all_tasks()
+SetupRunner(args.dry_run, args.clear_venv_and_node_modules, args.use_host_paths).run_all_tasks()
