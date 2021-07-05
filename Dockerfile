@@ -31,7 +31,7 @@ RUN mkdir /dmp-contained
 
 COPY ./files-for-container /dmp-contained/files
 
-WORKDIR /dmp-contained/files
+WORKDIR /dmp-contained/files/env-runner
 
 RUN pip install -r requirements.in
 

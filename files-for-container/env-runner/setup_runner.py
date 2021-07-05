@@ -14,13 +14,13 @@ class SetupRunner:
         script_directory = os.path.abspath(os.path.dirname(__file__))
 
         self.mount_directory: str = \
-            f"{script_directory}/../{'mount' if not use_host_paths else 'mount-for-container'}"
+            f"{script_directory}/../../{'mount' if not use_host_paths else 'mount-for-container'}"
         self.apps_code_directory: str = f"{self.mount_directory}/apps-github-repos"
-        self.files_directory: str = \
-            f"{script_directory}/../{'files' if not use_host_paths else 'files-for-container'}"
+        self.runner_directory: str = \
+            f"{script_directory}/../../{'files' if not use_host_paths else 'files-for-container'}/env-runner"
 
         # TODO raise error if app_code_directory does not exist
-        # TODO raise error if files_directory does not exist
+        # TODO raise error if runner_directory does not exist
 
         SetupRunner._display_status_banner("SETUP STARTED")
 
@@ -62,7 +62,7 @@ class SetupRunner:
         self._run_shell_command("/etc/init.d/redis-server start")
 
     def start_apps(self):
-        with open(f"{self.files_directory}/settings.yml", 'r') as stream:
+        with open(f"{self.runner_directory}/config/settings.yml", 'r') as stream:
             try:
                 # In python 3.6+, it seems that dict loading order is preserved (source:
                 # https://stackoverflow.com/questions/39980323/are-dictionaries-ordered-in-python-3-6) Therefore,
@@ -99,7 +99,7 @@ class SetupRunner:
 
     def stand_up_nginx(self):
         SetupRunner._display_status_banner("Starting nginx...")
-        self._run_shell_command("cp nginx.conf /etc/nginx/")
+        self._run_shell_command(f"cp {self.runner_directory}/config/nginx.conf /etc/nginx/")
         self._run_shell_command("/etc/init.d/nginx start")
 
     def _run_shell_command(self, command: str, working_directory: str = None):
