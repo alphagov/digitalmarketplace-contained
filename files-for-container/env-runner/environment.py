@@ -9,7 +9,7 @@ class Environment:
         self.dry_run = dry_run
         self._construct_common_directory_paths(use_host_paths)
 
-    def run_shell_command(self, command: str, working_directory: str = None):
+    def run_safe_shell_command(self, command: str, working_directory: str = None):
         if working_directory is None:
             working_directory: str = os.getcwd()
         if not os.path.isdir(working_directory):
