@@ -73,9 +73,9 @@ Docker
   ``` 
   This is going to open up a shell on the container
 
-* In the container, run `/usr/local/bin/python3.6 setup.py`
-  * the `--dry-run` flag is supported. Use `--help` for more info
-  * actually, you could run this as part of the previous step, but let's keep simple for now
+* In the container, run `/usr/local/bin/python3.6 start.py`
+  * use the `--help` option for finding out all the options available when running the script
+  * (actually, you could run this as part of the previous step, but let's keep simple for now)
 
 When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a
 DMp webpage (or most likely a Flask error page from the container at this stage of development).
@@ -92,8 +92,8 @@ DMp webpage (or most likely a Flask error page from the container at this stage 
 * Nice to haves
   * Add automated regression tests
   * Improve speed of the setup (e.g. caching, parallelisation)
-  * Make the step of running the `setup.py` automatic.
-    * I really wanted to add this as last step of the Dockerfile (`CMD /usr/local/python3 setup.py`)
-      however the problem was that the setup script needs the `mount-for-container` folder to be mounted
+  * Make the step of running the `start.py` automatic.
+    * I really wanted to add this as last step of the Dockerfile (`CMD /usr/local/python3 start.py`)
+      however the problem was that the start script needs the `mount-for-container` folder to be mounted
       but that can't be done in the Dockerfile.
       There must be a proper solution/pattern for this. Maybe worth asking a Docker expert.

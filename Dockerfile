@@ -35,4 +35,4 @@ WORKDIR /dmp-contained/files/env-runner
 
 RUN pip install -r requirements.in
 
-# CMD ["/usr/local/bin/python3.6", "setup.py"]
+# CMD ["/usr/local/bin/python3.6", "start.py"]
