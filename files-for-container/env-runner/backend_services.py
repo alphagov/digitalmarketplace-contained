@@ -61,7 +61,8 @@ class PostgresBackendService(BackendService):
         postgres_user = "postgres"
 
         self.env.run_safe_shell_command(f'psql --user {postgres_user} --command "CREATE DATABASE digitalmarketplace;"')
-        self.env.run_safe_shell_command(f'psql --user {postgres_user} --command "CREATE DATABASE digitalmarketplace_test;"')
+        self.env.run_safe_shell_command(
+            f'psql --user {postgres_user} --command "CREATE DATABASE digitalmarketplace_test;"')
 
         # The api app will try to log in into the db with the user of the current shell (that is, 'root') rather than
         # 'postgres'
