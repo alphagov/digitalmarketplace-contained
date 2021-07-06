@@ -5,9 +5,9 @@ from colored import fg, bg, attr
 
 class Environment:
 
-    def __init__(self, dry_run: bool, use_host_paths: bool):
+    def __init__(self, dry_run: bool):
         self.dry_run = dry_run
-        self._construct_common_directory_paths(use_host_paths)
+        self._construct_common_directory_paths()
 
     def run_safe_shell_command(self, command: str, working_directory: str = None):
         if working_directory is None:
@@ -23,12 +23,9 @@ class Environment:
     def display_status_banner(status_text: str):
         print(f"%s%s%s {status_text} %s" % (fg('white'), bg('blue'), attr(1), attr(0)))
 
-    def _construct_common_directory_paths(self, use_host_paths: bool):
-        script_directory = os.path.abspath(os.path.dirname(__file__))
-        self.mount_directory: str = \
-            f"{script_directory}/../../{'mount' if not use_host_paths else 'mount-for-container'}"
+    def _construct_common_directory_paths(self):
+        this_script_directory = os.path.abspath(os.path.dirname(__file__))
+        self.mount_directory: str = f"{this_script_directory}/../../mount"
         self.apps_code_directory: str = f"{self.mount_directory}/apps-github-repos"
-        self.runner_directory: str = \
-            f"{script_directory}/../../{'files' if not use_host_paths else 'files-for-container'}/env-runner"
-        # TODO raise error if app_code_directory does not exist
-        # TODO raise error if runner_directory does not exist
+        self.runner_directory: str = this_script_directory
+        # TODO raise error if directories don't exist
