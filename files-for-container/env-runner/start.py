@@ -10,7 +10,7 @@ parser.add_argument('--dry-run',
                     help="shell commands are not run.")
 parser.add_argument('--without-backend-services',
                     action='store_true', dest='without_backend_services', default=False,
-                    help="""backend services are not provision as part of this container -
+                    help="""backend services are not provisioned as part of this container -
                             however those services should be available before this is run.""")
 parser.add_argument('--clear-venv-and-node-modules',
                     action='store_true', dest='clear_venv_and_node_modules', default=False,
