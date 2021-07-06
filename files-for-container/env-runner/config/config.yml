@@ -35,6 +35,3 @@ repositories:
   digitalmarketplace-scripts:
     name: scripts
     bootstrap: invoke requirements-dev
-
-  digitalmarketplace-functional-tests:
-    name: functional-tests
