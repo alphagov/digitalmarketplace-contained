@@ -1,4 +1,4 @@
-repositories:
+apps:
   digitalmarketplace-api:
     name: api
     bootstrap: invoke requirements-dev run-migrations
@@ -30,8 +30,3 @@ repositories:
   digitalmarketplace-user-frontend:
     name: user-frontend
     bootstrap: invoke requirements-dev frontend-build
-
-  # Additional repositories to download and bootstrap during setup, but aren't "run" like the rest of the apps.
-  digitalmarketplace-scripts:
-    name: scripts
-    bootstrap: invoke requirements-dev

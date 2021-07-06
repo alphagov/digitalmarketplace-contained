@@ -28,4 +28,4 @@ if not args.without_backend_services:
         .provision_services()
 
 AppsProvision(env, args.clear_venv_and_node_modules)\
-    .start_all_apps()
+    .provision_all_apps()
