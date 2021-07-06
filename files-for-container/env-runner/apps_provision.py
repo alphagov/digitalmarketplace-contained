@@ -10,7 +10,7 @@ class AppsProvision:
         self.clear_venv_and_node_modules = clear_venv_and_node_modules
 
     def start_all_apps(self):
-        with open(f"{self.env.runner_directory}/config/settings.yml", 'r') as stream:
+        with open(f"{self.env.runner_directory}/config/config.yml", 'r') as stream:
             try:
                 # In python 3.6+, it seems that dict loading order is preserved (source:
                 # https://stackoverflow.com/questions/39980323/are-dictionaries-ordered-in-python-3-6) Therefore,

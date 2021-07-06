@@ -1,0 +1,40 @@
+repositories:
+  digitalmarketplace-api:
+    name: api
+    bootstrap: invoke requirements-dev run-migrations
+
+  digitalmarketplace-search-api:
+    name: search-api
+    bootstrap: invoke requirements-dev
+
+  digitalmarketplace-admin-frontend:
+    name: admin-frontend
+    bootstrap: invoke requirements-dev frontend-build
+
+  digitalmarketplace-brief-responses-frontend:
+    name: brief-responses-frontend
+    bootstrap: invoke requirements-dev frontend-build
+
+  digitalmarketplace-briefs-frontend:
+    name: briefs-frontend
+    bootstrap: invoke requirements-dev frontend-build
+
+  digitalmarketplace-buyer-frontend:
+    name: buyer-frontend
+    bootstrap: invoke requirements-dev frontend-build
+
+  digitalmarketplace-supplier-frontend:
+    name: supplier-frontend
+    bootstrap: invoke requirements-dev frontend-build
+
+  digitalmarketplace-user-frontend:
+    name: user-frontend
+    bootstrap: invoke requirements-dev frontend-build
+
+  # Additional repositories to download and bootstrap during setup, but aren't "run" like the rest of the apps.
+  digitalmarketplace-scripts:
+    name: scripts
+    bootstrap: invoke requirements-dev
+
+  digitalmarketplace-functional-tests:
+    name: functional-tests
