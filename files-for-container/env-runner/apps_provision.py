@@ -1,5 +1,3 @@
-import yaml
-
 from environment import Environment
 
 
@@ -10,17 +8,8 @@ class AppsProvision:
         self.clear_venv_and_node_modules = clear_venv_and_node_modules
 
     def provision_all_apps(self):
-        with open(f"{self.env.runner_directory}/config/config.yml", 'r') as stream:
-            try:
-                configuration: dict = yaml.safe_load(stream)
-
-                app_name: str
-                for app_name, app_configuration in configuration['apps'].items():
-                    self._provision_app(app_name, app_configuration)
-
-            except yaml.YAMLError as exc:
-                # TODO this exception should probably be handled in a different way, e.g. exiting with a status code
-                print(exc)
+        for app_name, app_configuration in self.env.configuration()['apps'].items():
+            self._provision_app(app_name, app_configuration)
 
     def _provision_app(self, app_name: str, app_configuration: dict):
         bootstrap_command: str = app_configuration.get('bootstrap')

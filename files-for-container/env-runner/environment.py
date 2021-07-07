@@ -1,5 +1,6 @@
 import os
 import subprocess
+import yaml
 from colored import fg, bg, attr
 
 
@@ -8,6 +9,15 @@ class Environment:
     def __init__(self, dry_run: bool):
         self.dry_run = dry_run
         self._construct_common_directory_paths()
+
+    def configuration(self):
+        with open(f"{self.runner_directory}/config/config.yml", 'r') as stream:
+            try:
+                configuration: dict = yaml.safe_load(stream)
+                return configuration
+            except yaml.YAMLError as exc:
+                # TODO this exception should probably be handled in a different way, e.g. exiting with a status code
+                print(exc)
 
     def run_safe_shell_command(self, command: str, working_directory: str = None):
         if working_directory is None:
