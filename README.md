@@ -52,17 +52,17 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
 
 ## How to run this project
 
-* Clone this repo
+1. Clone this repo
 
-* Clone the apps' Github repos into `/resources-for-container/mount/apps-github-repos` (if you are using dm-runner you could just 
-  copy the content of the `code` directory over there)
+2. Clone the apps' Github repos into `/resources-for-container/mount/apps-github-repos` (if you are using dm-runner you could just 
+  copy the content of the `code` directory over there) [TODO: create a script to do this]
 
-* In the `/resources-for-container/mount` folder, add a file `test_data.sql` containing the SQL statements 
-  to initialise the database.
+3. In the `/resources-for-container/mount` folder, add a file `test_data.sql` containing the SQL statements 
+  to initialise the database (you can use the one from dm-runner).
 
-* Build the container: `docker build -t dmp-contained .`
+4. Build the container: `docker build -t dmp-contained .`
 
-* Run the container:
+5. Run the container:
   ```
   docker run \
   --init --rm -it \
@@ -74,9 +74,7 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
   ``` 
   This is going to open up a shell on the container
 
-* In the container, run `/usr/local/bin/python3.6 start.py`
-  * use the `--help` option for finding out all the options available when running the script
-  * (actually, you could run this as part of the previous step, but let's keep simple for now)
+6. In the container, run `/usr/local/bin/python3.6 start.py` (use the `--help` option for seeing all the options available when running the script) 
 
 When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a
 DMp webpage (or most likely a Flask error page from the container at this stage of development).

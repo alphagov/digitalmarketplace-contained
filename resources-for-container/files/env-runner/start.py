@@ -15,7 +15,8 @@ parser.add_argument('--without-backend-services',
 parser.add_argument('--clear-venv-and-node-modules',
                     action='store_true', dest='clear_venv_and_node_modules', default=False,
                     help="""deletes Python's virtual environment folder and
-                            Node's external modules cache folder when building the apps.""")
+                            Node's external modules cache folder when building the apps.
+                            Be aware this make the setup much longer.""")
 
 args = parser.parse_args()
 
