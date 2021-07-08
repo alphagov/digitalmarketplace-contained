@@ -6,6 +6,8 @@ from colored import fg, bg, attr
 
 class Environment:
 
+    POSTGRES_USER = "postgres"
+
     def __init__(self, dry_run: bool):
         self.dry_run = dry_run
         self._construct_common_directory_paths()
@@ -22,24 +24,6 @@ class Environment:
     def prepare_scripts(self):
         self.display_status_banner("Preparing scripts")
         self.run_safe_shell_command("invoke requirements-dev", f"{self.apps_code_directory}/digitalmarketplace-scripts")
-
-    def build_elasticsearch_indexes(self):
-        self.display_status_banner("Building elasticsearch indexes")
-        scripts_directory: str = f"{self.apps_code_directory}/digitalmarketplace-scripts"
-
-        self.run_safe_shell_command("""
-            . ./venv/bin/activate && \
-            ./scripts/index-to-search-service.py services dev \
-            --index=g-cloud-12 \
-            --frameworks=g-cloud-12 \
-            --create-with-mapping=services-g-cloud-12""", scripts_directory)
-
-        self.run_safe_shell_command("""
-            . ./venv/bin/activate && \
-            ./scripts/index-to-search-service.py briefs dev \
-            --index=briefs-digital-outcomes-and-specialists \
-            --frameworks=digital-outcomes-and-specialists-4 \
-            --create-with-mapping=briefs-digital-outcomes-and-specialists-2""", scripts_directory)
 
     def run_safe_shell_command(self, command: str, working_directory: str = None):
         if working_directory is None:

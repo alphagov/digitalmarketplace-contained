@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 
 from apps_provision import AppsProvision
 from backend_services_provision import BackendServicesProvision
+from backend_services_data_importer import BackendServicesDataImporter
 from environment import Environment
 
 parser = ArgumentParser(description="Starts a Digitalmarketplace environment.")
@@ -23,6 +24,7 @@ args = parser.parse_args()
 env = Environment(args.dry_run)
 
 env.display_status_banner("SETUP STARTED")
+env.prepare_scripts()
 
 if not args.without_provisioning_backend_services:
     BackendServicesProvision(env)\
@@ -31,5 +33,6 @@ if not args.without_provisioning_backend_services:
 AppsProvision(env, args.clear_venv_and_node_modules)\
     .provision_all_apps()
 
-env.prepare_scripts()
-env.build_elasticsearch_indexes()
+BackendServicesDataImporter(env)\
+    .populate_postgres_with_test_data()\
+    .build_elasticsearch_indexes()

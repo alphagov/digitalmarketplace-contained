@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from environment import Environment
 
@@ -46,11 +46,10 @@ class PostgresBackendService(BackendService):
         self.env.run_safe_shell_command("pg_ctlcluster 11 main restart")
 
     def initialise(self):
-        postgres_user = "postgres"
-
-        self.env.run_safe_shell_command(f'psql --user {postgres_user} --command "CREATE DATABASE digitalmarketplace;"')
         self.env.run_safe_shell_command(
-            f'psql --user {postgres_user} --command "CREATE DATABASE digitalmarketplace_test;"')
+            f'psql --user {self.env.POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace;"')
+        self.env.run_safe_shell_command(
+            f'psql --user {self.env.POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace_test;"')
 
         # The api app will try to log in into the db with the user of the current shell (that is, 'root') rather than
         # 'postgres'
@@ -58,12 +57,7 @@ class PostgresBackendService(BackendService):
         # it is probably just easier to create a new superuser role 'root'.
         # TODO try to avoid to create a new user - shall we run the api as the postgres user, rather than root?
         self.env.run_safe_shell_command(
-            f'psql --user {postgres_user} --command "CREATE ROLE root WITH LOGIN SUPERUSER;"')
-
-        test_data_dump_filepath: str = self.env.mount_directory + "/test_data.sql"
-        # TODO raise error if test data file is not found
-        self.env.run_safe_shell_command(
-            f'psql --user {postgres_user} --dbname digitalmarketplace --file {test_data_dump_filepath}')
+            f'psql --user {self.env.POSTGRES_USER} --command "CREATE ROLE root WITH LOGIN SUPERUSER;"')
 
 
 class ElasticsearchBackendService(BackendService):
