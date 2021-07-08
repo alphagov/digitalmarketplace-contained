@@ -19,6 +19,28 @@ class Environment:
                 # TODO this exception should probably be handled in a different way, e.g. exiting with a status code
                 print(exc)
 
+    def prepare_scripts(self):
+        self.display_status_banner("Preparing scripts")
+        self.run_safe_shell_command("invoke requirements-dev", f"{self.apps_code_directory}/digitalmarketplace-scripts")
+
+    def build_elasticsearch_indexes(self):
+        self.display_status_banner("Building elasticsearch indexes")
+        scripts_directory: str = f"{self.apps_code_directory}/digitalmarketplace-scripts"
+
+        self.run_safe_shell_command("""
+            . ./venv/bin/activate && \
+            ./scripts/index-to-search-service.py services dev \
+            --index=g-cloud-12 \
+            --frameworks=g-cloud-12 \
+            --create-with-mapping=services-g-cloud-12""", scripts_directory)
+
+        self.run_safe_shell_command("""
+            . ./venv/bin/activate && \
+            ./scripts/index-to-search-service.py briefs dev \
+            --index=briefs-digital-outcomes-and-specialists \
+            --frameworks=digital-outcomes-and-specialists-4 \
+            --create-with-mapping=briefs-digital-outcomes-and-specialists-2""", scripts_directory)
+
     def run_safe_shell_command(self, command: str, working_directory: str = None):
         if working_directory is None:
             working_directory: str = os.getcwd()

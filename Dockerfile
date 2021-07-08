@@ -24,6 +24,15 @@ RUN apt-get install -y nginx-full
 
 RUN apt-get install -y redis-server
 
+# Elasticsearch
+RUN apt-get install -y default-jdk
+RUN apt-get install -y wget
+RUN apt-get install -y gnupg2
+RUN wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+RUN sh -c 'echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" > /etc/apt/sources.list.d/elastic-7.x.list'
+RUN apt-get update
+RUN apt-get install elasticsearch
+
 # TODO remove this line - it is just to install tools for experimenting
 RUN apt-get install -y vim net-tools telnet iproute2
 

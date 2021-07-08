@@ -29,3 +29,6 @@ if not args.without_backend_services:
 
 AppsProvision(env, args.clear_venv_and_node_modules)\
     .provision_all_apps()
+
+env.prepare_scripts()
+env.build_elasticsearch_indexes()

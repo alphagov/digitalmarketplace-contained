@@ -47,7 +47,7 @@ versions to the ones used on production (as here we rely on the packages availab
 
 ## Requirements
 
-Docker
+Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch indexing is very intensive)
 
 
 ## How to run this project
@@ -66,6 +66,7 @@ Docker
   ```
   docker run \
   --init --rm -it \
+  --memory 6G \
   --name dmp-contained \
   -p 80:80 \
   --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount \
