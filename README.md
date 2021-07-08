@@ -54,10 +54,10 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
 
 * Clone this repo
 
-* Clone the apps' Github repos into `mount-for-container/apps-github-repos` (if you are using dm-runner you could just 
+* Clone the apps' Github repos into `/resources-for-container/mount/apps-github-repos` (if you are using dm-runner you could just 
   copy the content of the `code` directory over there)
 
-* In the `mount-for-container` folder, add a file `test_data.sql` containing the SQL statements 
+* In the `/resources-for-container/mount` folder, add a file `test_data.sql` containing the SQL statements 
   to initialise the database.
 
 * Build the container: `docker build -t dmp-contained .`
@@ -69,7 +69,7 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
   --memory 6G \
   --name dmp-contained \
   -p 80:80 \
-  --mount type=bind,source="$(pwd)"/mount-for-container,target=/dmp-contained/mount \
+  --mount type=bind,source="$(pwd)"/resources-for-container/mount,target=/dmp-contained/mount \
   dmp-contained /bin/bash
   ``` 
   This is going to open up a shell on the container
@@ -95,6 +95,6 @@ DMp webpage (or most likely a Flask error page from the container at this stage 
   * Improve speed of the setup (e.g. caching, parallelisation)
   * Make the step of running the `start.py` automatic.
     * I really wanted to add this as last step of the Dockerfile (`CMD /usr/local/python3 start.py`)
-      however the problem was that the start script needs the `mount-for-container` folder to be mounted
+      however the problem was that the start script needs the `mount` folder to be mounted
       but that can't be done in the Dockerfile.
       There must be a proper solution/pattern for this. Maybe worth asking a Docker expert.

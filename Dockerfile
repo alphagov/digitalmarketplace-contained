@@ -38,7 +38,7 @@ RUN apt-get install -y vim net-tools telnet iproute2
 
 RUN mkdir /dmp-contained
 
-COPY ./files-for-container /dmp-contained/files
+COPY ./resources-for-container/files /dmp-contained/files
 
 WORKDIR /dmp-contained/files/env-runner
 
