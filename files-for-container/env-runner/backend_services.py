@@ -76,3 +76,18 @@ class PostgresBackendService(BackendService):
         # TODO raise error if test data file is not found
         self.env.run_safe_shell_command(
             f'psql --user {postgres_user} --dbname digitalmarketplace --file {test_data_dump_filepath}')
+
+
+class ElasticsearchBackendService(BackendService):
+    def configure(self):
+        pass
+
+    def launch(self):
+        self.env.run_safe_shell_command("service elasticsearch start")
+
+    def initialise(self):
+        # Ideally this is the place to build the indexes. However, that would need the api app to available.
+        # As provisioning the backend services (and therefore running this method) is done before provisioning the apps,
+        # the building of the indexes can't happen at this stage.
+        # That will be performed by the method Environment::build_elasticsearch_indexes()
+        pass
