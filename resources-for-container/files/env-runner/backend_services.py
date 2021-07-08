@@ -8,15 +8,12 @@ class BackendService(ABC):
     def __init__(self, env: Environment):
         self.env = env
 
-    @abstractmethod
     def configure(self):
         pass
 
-    @abstractmethod
     def launch(self):
         pass
 
-    @abstractmethod
     def initialise(self):
         pass
 
@@ -34,19 +31,10 @@ class NginxBackendService(BackendService):
     def launch(self):
         self.env.run_safe_shell_command("/etc/init.d/nginx start")
 
-    def initialise(self):
-        pass
-
 
 class RedisBackendService(BackendService):
-    def configure(self):
-        pass
-
     def launch(self):
         self.env.run_safe_shell_command("/etc/init.d/redis-server start")
-
-    def initialise(self):
-        pass
 
 
 class PostgresBackendService(BackendService):
@@ -79,15 +67,5 @@ class PostgresBackendService(BackendService):
 
 
 class ElasticsearchBackendService(BackendService):
-    def configure(self):
-        pass
-
     def launch(self):
         self.env.run_safe_shell_command("service elasticsearch start")
-
-    def initialise(self):
-        # Ideally this is the place to build the indexes. However, that would need the api app to available.
-        # As provisioning the backend services (and therefore running this method) is done before provisioning the apps,
-        # the building of the indexes can't happen at this stage.
-        # That will be performed by the method Environment::build_elasticsearch_indexes()
-        pass
