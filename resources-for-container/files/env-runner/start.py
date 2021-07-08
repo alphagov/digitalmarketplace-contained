@@ -8,8 +8,8 @@ parser = ArgumentParser(description="Starts a Digitalmarketplace environment.")
 parser.add_argument('--dry-run',
                     action='store_true', dest='dry_run', default=False,
                     help="shell commands are not run.")
-parser.add_argument('--without-backend-services',
-                    action='store_true', dest='without_backend_services', default=False,
+parser.add_argument('--without-provisioning-backend-services',
+                    action='store_true', dest='without_provisioning_backend_services', default=False,
                     help="""backend services are not provisioned as part of this container -
                             however those services should be available before this is run.""")
 parser.add_argument('--clear-venv-and-node-modules',
@@ -24,7 +24,7 @@ env = Environment(args.dry_run)
 
 env.display_status_banner("SETUP STARTED")
 
-if not args.without_backend_services:
+if not args.without_provisioning_backend_services:
     BackendServicesProvision(env)\
         .provision_services()
 
