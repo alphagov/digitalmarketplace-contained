@@ -6,3 +6,4 @@ invoke
 redis
 pyyaml
 flake8
+mypy
