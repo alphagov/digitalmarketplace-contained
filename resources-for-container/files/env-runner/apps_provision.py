@@ -1,3 +1,5 @@
+from typing import NoReturn
+
 from environment import Environment
 
 
@@ -7,11 +9,11 @@ class AppsProvision:
         self.env = env
         self.clear_venv_and_node_modules = clear_venv_and_node_modules
 
-    def provision_all_apps(self):
+    def provision_all_apps(self) -> NoReturn:
         for app_name, app_configuration in self.env.configuration()['apps'].items():
             self._provision_app(app_name, app_configuration)
 
-    def _provision_app(self, app_name: str, app_configuration: dict):
+    def _provision_app(self, app_name: str, app_configuration: dict) -> NoReturn:
         bootstrap_command: str = app_configuration.get('bootstrap')
 
         Environment.display_status_banner(f"Preparing app: {app_name}")

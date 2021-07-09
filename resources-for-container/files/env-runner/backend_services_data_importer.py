@@ -1,3 +1,5 @@
+from typing import NoReturn
+
 from environment import Environment
 
 
@@ -6,7 +8,7 @@ class BackendServicesDataImporter:
     def __init__(self, env: Environment):
         self.env = env
 
-    def populate_postgres_with_test_data(self):
+    def populate_postgres_with_test_data(self) -> NoReturn:
         self.env.display_status_banner("Populating Postgres with test data")
 
         test_data_dump_filepath: str = self.env.mount_directory + "/test_data.sql"
@@ -14,9 +16,8 @@ class BackendServicesDataImporter:
 
         self.env.run_safe_shell_command(
             f'psql --user {self.env.POSTGRES_USER} --dbname digitalmarketplace --file {test_data_dump_filepath}')
-        return self
 
-    def build_elasticsearch_indexes(self):
+    def build_elasticsearch_indexes(self) -> NoReturn:
         self.env.display_status_banner("Building Elasticsearch indexes")
 
         scripts_directory: str = f"{self.env.apps_code_directory}/digitalmarketplace-scripts"
@@ -34,5 +35,3 @@ class BackendServicesDataImporter:
             --index=briefs-digital-outcomes-and-specialists \
             --frameworks=digital-outcomes-and-specialists-4 \
             --create-with-mapping=briefs-digital-outcomes-and-specialists-2""", scripts_directory)
-
-        return self
