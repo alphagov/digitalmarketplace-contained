@@ -30,9 +30,10 @@ their version compared to running them as separate containers - that is because 
 for the container operating system (see Dockerfile) which may be different from the one we use on production.
 
 2. It is slow to stand up an environment - everything needs to be provisioned basically from scratch.
-At the time of writing, it takes around 35 mins for the environment to be ready, roughly distributed as
+At the time of writing, it takes around 35 mins* for the environment to be ready, roughly distributed as
    1 min to provision the backend services, 20 mins to start the apps, 5 mins for importing test data in Postgres
    and 10 minutes to build the Elasticsearch indexes.
+   (*) on a Macbook Pro, 2.2 GHz Quad-Core Intel Core i7, 16 GB 1600 MHz DDR3 RAM)
 
 3. Having at least 6GB of RAM for Docker is needed, mostly because the ElasticSearch indexing is very intensive.
 
@@ -47,8 +48,8 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
 
 1. Clone this repo
 
-2. Clone the apps' Github repos into `/resources-for-container/mount/apps-github-repos` (if you are using dm-runner you could just 
-  copy the content of the `code` directory over there) [TODO: create a script to do this]
+2. Clone the apps' Github repos into `/resources-for-container/mount/apps-github-repos` (if you are using dm-runner you
+   could just copy the content of the `code` directory over there) [TODO: create a script to do this]
 
 3. In the `/resources-for-container/mount` folder, add a file `test_data.sql` containing the SQL statements 
   to initialise the database (you can use the one from dm-runner).
@@ -67,7 +68,8 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
   ``` 
   This is going to open up a shell on the container
 
-6. In the container, run `/usr/local/bin/python3.6 start.py` (use the `--help` option for seeing all the options available when running the script) 
+6. In the container, run `/usr/local/bin/python3.6 start.py` (use the `--help` option for seeing all the options
+   available when running the script) 
 
 When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a
 DMp webpage (or most likely a Flask error page from the container at this stage of development).
@@ -78,7 +80,6 @@ DMp webpage (or most likely a Flask error page from the container at this stage 
   * Protect the Github main branch and require review for integration
   * Clean up and refactor the code to make it very maintainable and easy-to-follow
   * Review how we can make the container more observable and easier to troubleshoot problems
-  * Add implementation for Elasticsearch
   * Add implementation for S3
   * Ensure we can run automated tests against the environment
 * Nice to haves
