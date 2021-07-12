@@ -33,6 +33,6 @@ if not args.without_provisioning_backend_services:
 AppsProvision(env, args.clear_venv_and_node_modules)\
     .provision_all_apps()
 
-BackendServicesDataImporter(env)\
-    .populate_postgres_with_test_data()\
-    .build_elasticsearch_indexes()
+backendServicesDataImporter = BackendServicesDataImporter(env)
+backendServicesDataImporter.populate_postgres_with_test_data()
+backendServicesDataImporter.build_elasticsearch_indexes()

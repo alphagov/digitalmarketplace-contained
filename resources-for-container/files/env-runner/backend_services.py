@@ -8,16 +8,16 @@ class BackendService(ABC):
     def __init__(self, env: Environment):
         self.env = env
 
-    def configure(self):
+    def configure(self) -> None:
         pass
 
-    def launch(self):
+    def launch(self) -> None:
         pass
 
-    def initialise(self):
+    def initialise(self) -> None:
         pass
 
-    def provision(self):
+    def provision(self) -> None:
         Environment.display_status_banner("Starting backend service: " + self.__class__.__name__)
         self.configure()
         self.launch()
@@ -25,27 +25,27 @@ class BackendService(ABC):
 
 
 class NginxBackendService(BackendService):
-    def configure(self):
+    def configure(self) -> None:
         self.env.run_safe_shell_command(f"cp {self.env.runner_directory}/config/nginx.conf /etc/nginx/")
 
-    def launch(self):
+    def launch(self) -> None:
         self.env.run_safe_shell_command("/etc/init.d/nginx start")
 
 
 class RedisBackendService(BackendService):
-    def launch(self):
+    def launch(self) -> None:
         self.env.run_safe_shell_command("/etc/init.d/redis-server start")
 
 
 class PostgresBackendService(BackendService):
-    def configure(self):
+    def configure(self) -> None:
         self.env.run_safe_shell_command("sed -i 's/peer/trust/g' /etc/postgresql/11/main/pg_hba.conf")
         self.env.run_safe_shell_command("sed -i 's/md5/trust/g' /etc/postgresql/11/main/pg_hba.conf")
 
-    def launch(self):
+    def launch(self) -> None:
         self.env.run_safe_shell_command("pg_ctlcluster 11 main restart")
 
-    def initialise(self):
+    def initialise(self) -> None:
         self.env.run_safe_shell_command(
             f'psql --user {self.env.POSTGRES_USER} --command "CREATE DATABASE digitalmarketplace;"')
         self.env.run_safe_shell_command(
@@ -61,5 +61,5 @@ class PostgresBackendService(BackendService):
 
 
 class ElasticsearchBackendService(BackendService):
-    def launch(self):
+    def launch(self) -> None:
         self.env.run_safe_shell_command("service elasticsearch start")

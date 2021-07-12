@@ -1,3 +1,5 @@
+from typing import Optional, Dict
+
 from environment import Environment
 
 
@@ -7,12 +9,12 @@ class AppsProvision:
         self.env = env
         self.clear_venv_and_node_modules = clear_venv_and_node_modules
 
-    def provision_all_apps(self):
+    def provision_all_apps(self) -> None:
         for app_name, app_configuration in self.env.configuration()['apps'].items():
             self._provision_app(app_name, app_configuration)
 
-    def _provision_app(self, app_name: str, app_configuration: dict):
-        bootstrap_command: str = app_configuration.get('bootstrap')
+    def _provision_app(self, app_name: str, app_configuration: Dict[str, str]) -> None:
+        bootstrap_command: Optional[str] = app_configuration.get('bootstrap')
 
         Environment.display_status_banner(f"Preparing app: {app_name}")
 
@@ -24,7 +26,8 @@ class AppsProvision:
 
         # TODO change the following line so that we don't run a command coming from config.yml
         # to minimise risk of shell/command injection
-        self.env.run_safe_shell_command(bootstrap_command, app_code_directory)
+        if bootstrap_command:
+            self.env.run_safe_shell_command(bootstrap_command, app_code_directory)
 
         Environment.display_status_banner(f"Launching app: {app_name}")
 
