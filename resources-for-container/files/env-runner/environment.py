@@ -1,5 +1,7 @@
 import os
 import subprocess
+import sys
+import traceback
 
 import yaml
 from colored import fg, bg, attr  # type: ignore
@@ -14,14 +16,17 @@ class Environment:
         self._construct_common_directory_paths()
 
     def configuration(self) -> dict:
-        with open(f"{self.runner_directory}/config/config.yml", 'r') as stream:
-            try:
-                configuration: dict = yaml.safe_load(stream)
-                return configuration
-            except yaml.YAMLError as exc:
-                # TODO this exception should probably be handled in a different way, e.g. exiting with a status code
-                print(exc)
-                return {}
+        try:
+            with open(f"{self.runner_directory}/config/config.yml", 'r') as stream:
+                try:
+                    configuration: dict = yaml.safe_load(stream)
+                    return configuration
+                except yaml.YAMLError as yaml_exception:
+                    Environment.exit_with_error_message(yaml_exception)
+                    return {}
+        except FileNotFoundError as file_exception:
+            Environment.exit_with_error_message(file_exception)
+            return {}
 
     def prepare_scripts(self) -> None:
         self.display_status_banner("Preparing scripts")
@@ -40,6 +45,15 @@ class Environment:
     @staticmethod
     def display_status_banner(status_text: str) -> None:
         print(f"%s%s%s {status_text} %s" % (fg('white'), bg('blue'), attr(1), attr(0)))
+
+    @staticmethod
+    def exit_with_error_message(exception: Exception) -> None:
+        exception_message: str = str(exception)
+        print(
+            f"%s%s%s An error has occurred and the program is terminating {os.linesep} Error: {exception_message} %s"
+            % (fg('white'), bg('red'), attr(1), attr(0)))
+        print(traceback.format_exc())
+        sys.exit(exception_message)
 
     def _construct_common_directory_paths(self) -> None:
         this_script_directory = os.path.abspath(os.path.dirname(__file__))
