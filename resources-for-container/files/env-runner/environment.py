@@ -24,10 +24,8 @@ class Environment:
                     return configuration
                 except yaml.YAMLError as yaml_exception:
                     Environment.exit_with_error_message(yaml_exception)
-                    return {}
         except FileNotFoundError as file_exception:
             Environment.exit_with_error_message(file_exception)
-            return {}
 
     def prepare_scripts(self) -> None:
         self.display_status_banner("Preparing scripts")
