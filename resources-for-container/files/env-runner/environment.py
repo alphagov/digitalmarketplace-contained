@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 import traceback
+from typing import NoReturn
 
 import yaml
 from colored import fg, bg, attr  # type: ignore
@@ -47,7 +48,7 @@ class Environment:
         print(f"%s%s%s {status_text} %s" % (fg('white'), bg('blue'), attr(1), attr(0)))
 
     @staticmethod
-    def exit_with_error_message(exception: Exception) -> None:
+    def exit_with_error_message(exception: Exception) -> NoReturn:
         exception_message: str = str(exception)
         print(
             f"%s%s%s An error has occurred and the program is terminating {os.linesep} Error: {exception_message} %s"
