@@ -89,8 +89,8 @@ class LocalstackBackendService(BackendService):
             )
         except s3.meta.client.exceptions.BucketAlreadyExists:
             pass
-        except Exception:
-            # TODO use new method from https://github.com/alphagov/digitalmarketplace-contained/pull/11 once merged
+        except Exception as exception:
+            Environment.exit_with_error_message(exception)
             pass
 
     def launch(self) -> None:
