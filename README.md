@@ -96,8 +96,8 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
 8. In the container, run `/usr/local/bin/python3.6 start.py` (use the `--help` option for seeing all the options
    available when running the script) 
 
-When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a
-DMp webpage (or most likely a Flask error page from the container at this stage of development).
+When this script ends you should be able to hit `http://localhost` on your browser (host environment) and see a
+DMp webpage
 
 ## TODO
 * Look at `TODO` comments in the files
