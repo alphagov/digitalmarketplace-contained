@@ -1,4 +1,6 @@
+import os
 from abc import ABC
+import boto3  # type: ignore
 
 from environment import Environment
 
@@ -63,3 +65,34 @@ class PostgresBackendService(BackendService):
 class ElasticsearchBackendService(BackendService):
     def launch(self) -> None:
         self.env.run_safe_shell_command("service elasticsearch start")
+
+
+class LocalstackBackendService(BackendService):
+    def configure(self) -> None:
+
+        localstack_port: int = 4566
+
+        # see https://github.com/alphagov/digitalmarketplace-admin-frontend/blob/main/config.py#L113
+        dev_bucket_name: str = "digitalmarketplace-dev-uploads"
+
+        # see https://github.com/alphagov/digitalmarketplace-runner/blob/main/config/settings.yml#L17
+        os.environ["AWS_ACCESS_KEY_ID"] = "test"
+        os.environ["AWS_SECRET_ACCESS_KEY"] = "test"
+        os.environ["DM_S3_ENDPOINT_PORT"] = str(localstack_port)
+
+        s3_region = "eu-west-1"
+        s3_endpoint_url = f"http://localstack:{str(localstack_port)}"
+        s3 = boto3.resource("s3", region_name=s3_region, endpoint_url=s3_endpoint_url)
+        try:
+            s3.create_bucket(
+                Bucket=dev_bucket_name, CreateBucketConfiguration={"LocationConstraint": s3_region}
+            )
+        except s3.meta.client.exceptions.BucketAlreadyExists:
+            pass
+        except Exception:
+            # TODO use new method from https://github.com/alphagov/digitalmarketplace-contained/pull/11 once merged
+            pass
+
+    def launch(self) -> None:
+        # This service is currently run in another container - see README file
+        pass

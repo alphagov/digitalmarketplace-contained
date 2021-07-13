@@ -20,8 +20,12 @@ The architecture priorities simplicity and economy of setup above other factors.
 The single Docker container runs all the apps and backend services. The apps code is mounted onto the container so that 
 when the code is changed on the host, those changes are reflected in the container.
 
-The apps are run via the built-in Flask web server (each app listens on a different port) while nginx, redis and 
-postgres are run as services on the container (no Docker-in-docker).
+The apps are run via the built-in Flask web server (each app listens on a different port) while nginx, redis, 
+postgres and elasticsearch are run as services on the container (no Docker-in-docker).
+
+[Localstack](https://github.com/localstack/localstack) (which "emulates" the AWS S3 service so to run the environment
+without the need of AWS credentials) is running as a separate container. 
+The dmp-contained and localstack containers are  attached to a Docker network so that they can communicate.
 
 ## Pain points
 
@@ -54,21 +58,42 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
 3. In the `/resources-for-container/mount` folder, add a file `test_data.sql` containing the SQL statements 
   to initialise the database (you can use the one from dm-runner).
 
-4. Build the container: `docker build -t dmp-contained .`
+4. Create network to attach both the Localstack and dmp-contained containers to (only the first time):
+   `docker network create dmp-contained`
 
-5. Run the container:
+5. Run the Localstack container:
+  ```
+  docker run \
+  --rm -it \
+  --net=dmp-contained \
+  --net-alias=s3.localhost.localstack.cloud \
+  --net-alias=digitalmarketplace-dev-uploads.s3.localhost.localstack.cloud \
+  --name=localstack \
+  -p 4566:4566 \
+  --env SERVICES=s3 \
+  --env DATA_DIR=/tmp/localstack \
+  --env DEFAULT_REGION=eu-west-1 \
+  --mount 'type=volume,source=s3-data,target=/tmp/localstack' \
+  --volume /var/run/docker.sock:/var/run/docker.sock \
+  localstack/localstack:0.12.9.1@sha256:bf1685501c6b3f75a871b5319857b2cc88158eb80a225afe8abef9a935d5148a
+  ``` 
+
+6. Build the dmp-contained container: `docker build -t dmp-contained .`
+
+7. Run the container:
   ```
   docker run \
   --init --rm -it \
   --memory 6G \
   --name dmp-contained \
+  --net=dmp-contained \
   -p 80:80 \
   --mount type=bind,source="$(pwd)"/resources-for-container/mount,target=/dmp-contained/mount \
   dmp-contained /bin/bash
   ``` 
   This is going to open up a shell on the container
 
-6. In the container, run `/usr/local/bin/python3.6 start.py` (use the `--help` option for seeing all the options
+8. In the container, run `/usr/local/bin/python3.6 start.py` (use the `--help` option for seeing all the options
    available when running the script) 
 
 When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a
