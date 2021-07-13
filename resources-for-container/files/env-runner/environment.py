@@ -36,21 +36,22 @@ class Environment:
             working_directory = os.getcwd()
         if not os.path.isdir(working_directory):
             raise OSError(f"Working directory {working_directory} not found; unable to run shell command.")
-        print(f"%s%s > Running command: {command} %s" % (fg('white'), bg('green'), attr(0)))
+        print(f"{fg('white')}{bg('green')} > Running command: {command} {attr(0)}")
         if not self.dry_run:
             # TODO command should be a list to prevent command injection attacks
             subprocess.run(command, cwd=working_directory, shell=True, check=True)
 
     @staticmethod
     def display_status_banner(status_text: str) -> None:
-        print(f"%s%s%s {status_text} %s" % (fg('white'), bg('blue'), attr(1), attr(0)))
+        print(f"{fg('white')}{bg('blue')}{attr('bold')} {status_text} {attr('reset')}")
 
     @staticmethod
     def exit_with_error_message(exception: Exception) -> NoReturn:
         exception_message: str = str(exception)
         print(
-            f"%s%s%s An error has occurred and the program is terminating {os.linesep} Error: {exception_message} %s"
-            % (fg('white'), bg('red'), attr(1), attr(0)))
+            f"{fg('white')}{bg('red')}{attr('bold')} "
+            f"An error has occurred and the program is terminating {os.linesep} Error: {exception_message} "
+            f"{attr('reset')}")
         print(traceback.format_exc())
         sys.exit(exception_message)
 
