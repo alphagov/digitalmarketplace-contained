@@ -1,5 +1,8 @@
 import os
 import subprocess
+import sys
+import traceback
+from typing import NoReturn
 
 import yaml
 from colored import fg, bg, attr  # type: ignore
@@ -14,14 +17,15 @@ class Environment:
         self._construct_common_directory_paths()
 
     def configuration(self) -> dict:
-        with open(f"{self.runner_directory}/config/config.yml", 'r') as stream:
-            try:
-                configuration: dict = yaml.safe_load(stream)
-                return configuration
-            except yaml.YAMLError as exc:
-                # TODO this exception should probably be handled in a different way, e.g. exiting with a status code
-                print(exc)
-                return {}
+        try:
+            with open(f"{self.runner_directory}/config/config.yml", 'r') as stream:
+                try:
+                    configuration: dict = yaml.safe_load(stream)
+                    return configuration
+                except yaml.YAMLError as yaml_exception:
+                    Environment.exit_with_error_message(yaml_exception)
+        except FileNotFoundError as file_exception:
+            Environment.exit_with_error_message(file_exception)
 
     def prepare_scripts(self) -> None:
         self.display_status_banner("Preparing scripts")
@@ -32,14 +36,24 @@ class Environment:
             working_directory = os.getcwd()
         if not os.path.isdir(working_directory):
             raise OSError(f"Working directory {working_directory} not found; unable to run shell command.")
-        print(f"%s%s > Running command: {command} %s" % (fg('white'), bg('green'), attr(0)))
+        print(f"{fg('white')}{bg('green')} > Running command: {command} {attr(0)}")
         if not self.dry_run:
             # TODO command should be a list to prevent command injection attacks
             subprocess.run(command, cwd=working_directory, shell=True, check=True)
 
     @staticmethod
     def display_status_banner(status_text: str) -> None:
-        print(f"%s%s%s {status_text} %s" % (fg('white'), bg('blue'), attr(1), attr(0)))
+        print(f"{fg('white')}{bg('blue')}{attr('bold')} {status_text} {attr('reset')}")
+
+    @staticmethod
+    def exit_with_error_message(exception: Exception) -> NoReturn:
+        exception_message: str = str(exception)
+        print(
+            f"{fg('white')}{bg('red')}{attr('bold')} "
+            f"An error has occurred and the program is terminating {os.linesep} Error: {exception_message} "
+            f"{attr('reset')}")
+        print(traceback.format_exc())
+        sys.exit(exception_message)
 
     def _construct_common_directory_paths(self) -> None:
         this_script_directory = os.path.abspath(os.path.dirname(__file__))

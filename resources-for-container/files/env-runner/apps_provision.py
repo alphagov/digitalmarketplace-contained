@@ -26,8 +26,13 @@ class AppsProvision:
 
         # TODO change the following line so that we don't run a command coming from config.yml
         # to minimise risk of shell/command injection
-        if bootstrap_command:
-            self.env.run_safe_shell_command(bootstrap_command, app_code_directory)
+        try:
+            if bootstrap_command:
+                self.env.run_safe_shell_command(bootstrap_command, app_code_directory)
+            else:
+                raise RuntimeError(f"A bootstrap command couldn't be found for the app {app_name}")
+        except RuntimeError as error:
+            Environment.exit_with_error_message(error)
 
         Environment.display_status_banner(f"Launching app: {app_name}")
 
