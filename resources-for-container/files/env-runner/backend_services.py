@@ -68,7 +68,12 @@ class ElasticsearchBackendService(BackendService):
 
 
 class LocalstackBackendService(BackendService):
-    def configure(self) -> None:
+
+    def launch(self) -> None:
+        # This service is currently launched in another container - see README file
+        pass
+
+    def initialise(self) -> None:
 
         localstack_port: int = 4566
 
@@ -92,7 +97,3 @@ class LocalstackBackendService(BackendService):
         except Exception as exception:
             Environment.exit_with_error_message(exception)
             pass
-
-    def launch(self) -> None:
-        # This service is currently run in another container - see README file
-        pass
