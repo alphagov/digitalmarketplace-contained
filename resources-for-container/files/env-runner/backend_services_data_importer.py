@@ -18,7 +18,7 @@ class BackendServicesDataImporter:
     def build_elasticsearch_indexes(self) -> None:
         self.env.display_status_banner("Building Elasticsearch indexes")
 
-        scripts_directory: str = f"{self.env.apps_code_directory}/digitalmarketplace-scripts"
+        scripts_directory: str = f"{self.env.github_repos_directory}/digitalmarketplace-scripts"
 
         self.env.run_safe_shell_command("""
             . ./venv/bin/activate && \

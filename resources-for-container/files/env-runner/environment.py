@@ -29,7 +29,7 @@ class Environment:
 
     def prepare_scripts(self) -> None:
         self.display_status_banner("Preparing scripts")
-        self.run_safe_shell_command("invoke requirements-dev", f"{self.apps_code_directory}/digitalmarketplace-scripts")
+        self.run_safe_shell_command("invoke requirements-dev", f"{self.github_repos_directory}/digitalmarketplace-scripts")
 
     def run_safe_shell_command(self, command: str, working_directory: str = None) -> None:
         if working_directory is None:
@@ -58,6 +58,6 @@ class Environment:
     def _construct_common_directory_paths(self) -> None:
         this_script_directory = os.path.abspath(os.path.dirname(__file__))
         self.mount_directory: str = f"{this_script_directory}/../../mount"
-        self.apps_code_directory: str = f"{self.mount_directory}/apps-github-repos"
+        self.github_repos_directory: str = f"{self.mount_directory}/github-repos"
         self.runner_directory: str = this_script_directory
         # TODO raise error if directories don't exist

@@ -18,7 +18,7 @@ class AppsProvision:
 
         Environment.display_status_banner(f"Preparing app: {app_name}")
 
-        app_code_directory: str = f"{self.env.apps_code_directory}/{app_name}"
+        app_code_directory: str = f"{self.env.github_repos_directory}/{app_name}"
 
         if self.clear_venv_and_node_modules:
             self.env.run_safe_shell_command("rm -rf venv", app_code_directory)
