@@ -39,7 +39,10 @@ class Environment:
         print(f"{fg('white')}{bg('green')} > Running command: {command} {attr(0)}")
         if not self.dry_run:
             # TODO command should be a list to prevent command injection attacks
-            subprocess.run(command, cwd=working_directory, shell=True, check=True)
+            try:
+                subprocess.run(command, cwd=working_directory, shell=True, check=True)
+            except Exception as exception:
+                self.exit_with_error_message(exception)
 
     @staticmethod
     def display_status_banner(status_text: str) -> None:
