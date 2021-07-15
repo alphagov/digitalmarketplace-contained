@@ -96,4 +96,3 @@ class LocalstackBackendService(BackendService):
             pass
         except Exception as exception:
             Environment.exit_with_error_message(exception)
-            pass
