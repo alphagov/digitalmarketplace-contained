@@ -29,6 +29,7 @@ class Environment:
 
     def prepare_scripts(self) -> None:
         self.display_status_banner("Preparing scripts")
+        self.update_github_repo_checkout('digitalmarketplace-scripts')
         self.run_safe_shell_command("invoke requirements-dev", f"{self.github_repos_directory}/digitalmarketplace-scripts")
 
     def run_safe_shell_command(self, command: str, working_directory: str = None) -> None:
@@ -43,6 +44,15 @@ class Environment:
                 subprocess.run(command, cwd=working_directory, shell=True, check=True)
             except Exception as exception:
                 self.exit_with_error_message(exception)
+
+    def update_github_repo_checkout(self, repo_name: str) -> None:
+        checkout_directory: str = f"{self.github_repos_directory}/{repo_name}"
+        repo_url: str = f"https://github.com/alphagov/{repo_name}.git"
+
+        if not os.path.isdir(checkout_directory):
+            self.run_safe_shell_command(f"git clone {repo_url} {checkout_directory}", self.github_repos_directory)
+        else:
+            self.run_safe_shell_command(f"git pull --rebase", checkout_directory)
 
     @staticmethod
     def display_status_banner(status_text: str) -> None:

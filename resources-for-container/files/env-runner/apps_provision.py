@@ -25,6 +25,8 @@ class AppsProvision:
 
         Environment.display_status_banner(f"Preparing app: {app_name}")
 
+        self.env.update_github_repo_checkout(repo_name)
+
         app_code_directory: str = f"{self.env.github_repos_directory}/{repo_name}"
 
         if self.clear_venv_and_node_modules:
