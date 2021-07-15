@@ -61,7 +61,7 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
 4. Create network to attach both the Localstack and dmp-contained containers to (only the first time):
    `docker network create dmp-contained`
 
-5. Run the Localstack container:
+5. Run the Localstack container in a separate terminal (or terminal tab):
   ```
   docker run \
   --rm -it \
