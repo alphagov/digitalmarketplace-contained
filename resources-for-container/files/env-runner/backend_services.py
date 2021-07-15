@@ -86,7 +86,7 @@ class LocalstackBackendService(BackendService):
         os.environ["DM_S3_ENDPOINT_PORT"] = str(localstack_port)
 
         s3_region = "eu-west-1"
-        s3_endpoint_url = f"http://localstack:{str(localstack_port)}"
+        s3_endpoint_url = f"http://localstack:{localstack_port}"
         s3 = boto3.resource("s3", region_name=s3_region, endpoint_url=s3_endpoint_url)
         try:
             s3.create_bucket(
