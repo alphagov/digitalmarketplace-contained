@@ -1,6 +1,7 @@
 from environment import Environment
 from backend_services import \
-    NginxBackendService, RedisBackendService, PostgresBackendService, ElasticsearchBackendService
+    NginxBackendService, RedisBackendService, PostgresBackendService, ElasticsearchBackendService, \
+    LocalstackBackendService
 
 
 class BackendServicesProvision:
@@ -13,3 +14,4 @@ class BackendServicesProvision:
         RedisBackendService(self.env).provision()
         PostgresBackendService(self.env).provision()
         ElasticsearchBackendService(self.env).provision()
+        LocalstackBackendService(self.env).provision()
