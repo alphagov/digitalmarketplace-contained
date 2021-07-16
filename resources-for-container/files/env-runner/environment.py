@@ -63,7 +63,7 @@ class Environment:
 
         apps_repo_names: List[str] = [app['repo_name'] for app in self.configuration().get('apps').values()]
 
-        valid_repo_names: List[str] = apps_repo_names;
+        valid_repo_names: List[str] = apps_repo_names
         valid_repo_names.append(self.SCRIPTS_REPO_NAME)
 
         return True if repo_name in valid_repo_names else False
