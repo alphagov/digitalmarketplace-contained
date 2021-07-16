@@ -99,6 +99,12 @@ checked out, it will perform a `git pull --rebase` on all the checkout folders._
 When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a
 DMp webpage (or most likely a Flask error page from the container at this stage of development).
 
+## Managing the environment
+
+Utilities to manage the environment can be found in the `resources-for-container/files/utils` folder, which is copied
+onto the container - typically, those utilities need to be run on the container.
+
+Ideally, we will have time to provide a more integrated and convenient management "consolle" at some point.
 
 ## TODO
 * Look at `TODO` comments in the files
