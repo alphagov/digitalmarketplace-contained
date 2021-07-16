@@ -2,7 +2,6 @@ import os
 import subprocess
 import sys
 import traceback
-from operator import itemgetter
 from typing import NoReturn, List
 
 import yaml
@@ -32,7 +31,8 @@ class Environment:
     def prepare_scripts(self) -> None:
         self.display_status_banner("Preparing scripts")
         self.update_github_repo_checkout(self.SCRIPTS_REPO_NAME)
-        self.run_safe_shell_command("invoke requirements-dev", f"{self.github_repos_directory}/{self.SCRIPTS_REPO_NAME}")
+        self.run_safe_shell_command(
+            "invoke requirements-dev", f"{self.github_repos_directory}/{self.SCRIPTS_REPO_NAME}")
 
     def run_safe_shell_command(self, command: str, working_directory: str = None) -> None:
         if working_directory is None:
@@ -57,7 +57,7 @@ class Environment:
         if not os.path.isdir(checkout_directory):
             self.run_safe_shell_command(f"git clone {repo_url} {checkout_directory}", self.github_repos_directory)
         else:
-            self.run_safe_shell_command(f"git pull --rebase", checkout_directory)
+            self.run_safe_shell_command("git pull --rebase", checkout_directory)
 
     def is_repo_name_valid(self, repo_name: str) -> bool:
 
