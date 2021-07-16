@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 import traceback
-from typing import NoReturn, List
+from typing import NoReturn, Set
 
 import yaml
 from colored import fg, bg, attr  # type: ignore
@@ -61,10 +61,10 @@ class Environment:
 
     def is_repo_name_valid(self, repo_name: str) -> bool:
 
-        apps_repo_names: List[str] = [app['repo_name'] for app in self.configuration().get('apps', {}).values()]
+        apps_repo_names: Set[str] = {app['repo_name'] for app in self.configuration().get('apps', {}).values()}
 
-        valid_repo_names: List[str] = apps_repo_names
-        valid_repo_names.append(self.SCRIPTS_REPO_NAME)
+        valid_repo_names: Set[str] = apps_repo_names
+        valid_repo_names.add(self.SCRIPTS_REPO_NAME)
 
         return True if repo_name in valid_repo_names else False
 
