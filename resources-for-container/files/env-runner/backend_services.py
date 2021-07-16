@@ -1,6 +1,6 @@
 import os
 from abc import ABC
-import boto3 # type: ignore
+import boto3  # type: ignore
 
 from environment import Environment
 
