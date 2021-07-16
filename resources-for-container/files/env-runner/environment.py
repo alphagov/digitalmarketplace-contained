@@ -61,7 +61,7 @@ class Environment:
 
     def is_repo_name_valid(self, repo_name: str) -> bool:
 
-        apps_repo_names: List[str] = [app['repo_name'] for app in self.configuration().get('apps').values()]
+        apps_repo_names: List[str] = [app['repo_name'] for app in self.configuration().get('apps', {}).values()]
 
         valid_repo_names: List[str] = apps_repo_names
         valid_repo_names.append(self.SCRIPTS_REPO_NAME)
