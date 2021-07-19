@@ -66,7 +66,7 @@ class Environment:
         valid_repo_names: Set[str] = apps_repo_names
         valid_repo_names.add(self.SCRIPTS_REPO_NAME)
 
-        return True if repo_name in valid_repo_names else False
+        return repo_name in valid_repo_names
 
     @staticmethod
     def display_status_banner(status_text: str) -> None:
