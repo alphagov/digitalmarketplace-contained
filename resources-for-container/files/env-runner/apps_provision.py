@@ -1,6 +1,7 @@
 from typing import Optional, Dict
 
 from environment import Environment
+from repos_updater import ReposUpdater
 
 
 class AppsProvision:
@@ -15,10 +16,19 @@ class AppsProvision:
 
     def _provision_app(self, app_name: str, app_configuration: Dict[str, str]) -> None:
         bootstrap_command: Optional[str] = app_configuration.get('bootstrap')
+        repo_name: Optional[str] = app_configuration.get('repo_name')
+
+        if not bootstrap_command:
+            raise RuntimeError(f"A bootstrap command couldn't be found for the app {app_name}")
+
+        if not repo_name:
+            raise RuntimeError(f"A repository name couldn't be found for the app {app_name}")
 
         Environment.display_status_banner(f"Preparing app: {app_name}")
 
-        app_code_directory: str = f"{self.env.apps_code_directory}/{app_name}"
+        ReposUpdater(self.env).update_local_repo(repo_name)
+
+        app_code_directory: str = f"{self.env.github_repos_directory}/{repo_name}"
 
         if self.clear_venv_and_node_modules:
             self.env.run_safe_shell_command("rm -rf venv", app_code_directory)
@@ -27,10 +37,7 @@ class AppsProvision:
         # TODO change the following line so that we don't run a command coming from config.yml
         # to minimise risk of shell/command injection
         try:
-            if bootstrap_command:
-                self.env.run_safe_shell_command(bootstrap_command, app_code_directory)
-            else:
-                raise RuntimeError(f"A bootstrap command couldn't be found for the app {app_name}")
+            self.env.run_safe_shell_command(bootstrap_command, app_code_directory)
         except RuntimeError as error:
             Environment.exit_with_error_message(error)
 

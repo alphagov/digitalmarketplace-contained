@@ -2,10 +2,11 @@ import os
 import subprocess
 import sys
 import traceback
-from typing import NoReturn
-
 import yaml
+from typing import NoReturn
 from colored import fg, bg, attr  # type: ignore
+
+from repos_updater import *
 
 
 class Environment:
@@ -29,7 +30,10 @@ class Environment:
 
     def prepare_scripts(self) -> None:
         self.display_status_banner("Preparing scripts")
-        self.run_safe_shell_command("invoke requirements-dev", f"{self.apps_code_directory}/digitalmarketplace-scripts")
+        reposUpdater = ReposUpdater(self)
+        reposUpdater.update_local_scripts_repo()
+        self.run_safe_shell_command(
+            "invoke requirements-dev", f"{self.github_repos_directory}/{reposUpdater.SCRIPTS_REPO_NAME}")
 
     def run_safe_shell_command(self, command: str, working_directory: str = None) -> None:
         if working_directory is None:
@@ -39,7 +43,10 @@ class Environment:
         print(f"{fg('white')}{bg('green')} > Running command: {command} {attr(0)}")
         if not self.dry_run:
             # TODO command should be a list to prevent command injection attacks
-            subprocess.run(command, cwd=working_directory, shell=True, check=True)
+            try:
+                subprocess.run(command, cwd=working_directory, shell=True, check=True)
+            except Exception as exception:
+                self.exit_with_error_message(exception)
 
     @staticmethod
     def display_status_banner(status_text: str) -> None:
@@ -58,6 +65,6 @@ class Environment:
     def _construct_common_directory_paths(self) -> None:
         this_script_directory = os.path.abspath(os.path.dirname(__file__))
         self.mount_directory: str = f"{this_script_directory}/../../mount"
-        self.apps_code_directory: str = f"{self.mount_directory}/apps-github-repos"
+        self.github_repos_directory: str = f"{self.mount_directory}/github-repos"
         self.runner_directory: str = this_script_directory
         # TODO raise error if directories don't exist

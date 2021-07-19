@@ -1,32 +1,32 @@
 apps:
-  digitalmarketplace-api:
-    name: api
+  api:
+    repo_name: digitalmarketplace-api
     bootstrap: invoke requirements-dev run-migrations
 
-  digitalmarketplace-search-api:
-    name: search-api
+  search-api:
+    repo_name: digitalmarketplace-search-api
     bootstrap: invoke requirements-dev
 
-  digitalmarketplace-admin-frontend:
-    name: admin-frontend
+  admin-frontend:
+    repo_name: digitalmarketplace-admin-frontend
     bootstrap: invoke requirements-dev frontend-build
 
-  digitalmarketplace-brief-responses-frontend:
-    name: brief-responses-frontend
+  brief-responses-frontend:
+    repo_name: digitalmarketplace-brief-responses-frontend
     bootstrap: invoke requirements-dev frontend-build
 
-  digitalmarketplace-briefs-frontend:
-    name: briefs-frontend
+  briefs-frontend:
+    repo_name: digitalmarketplace-briefs-frontend
     bootstrap: invoke requirements-dev frontend-build
 
-  digitalmarketplace-buyer-frontend:
-    name: buyer-frontend
+  buyer-frontend:
+    repo_name: digitalmarketplace-buyer-frontend
     bootstrap: invoke requirements-dev frontend-build
 
-  digitalmarketplace-supplier-frontend:
-    name: supplier-frontend
+  supplier-frontend:
+    repo_name: digitalmarketplace-supplier-frontend
     bootstrap: invoke requirements-dev frontend-build
 
-  digitalmarketplace-user-frontend:
-    name: user-frontend
+  user-frontend:
+    repo_name: digitalmarketplace-user-frontend
     bootstrap: invoke requirements-dev frontend-build
