@@ -34,10 +34,12 @@ their version compared to running them as separate containers - that is because 
 for the container operating system (see Dockerfile) which may be different from the one we use on production.
 
 2. It is slow to stand up an environment - everything needs to be provisioned basically from scratch.
-At the time of writing, it takes around 35 mins* for the environment to be ready, roughly distributed as
+At the time of writing, on a Macbook Pro, 2.2 GHz Quad-Core Intel Core i7, 16 GB 1600 MHz DDR3 RAM:
+   * it takes around 35 mins for the environment to be ready if the code is already on your computer, roughly distributed as
    1 min to provision the backend services, 20 mins to start the apps, 5 mins for importing test data in Postgres
    and 10 minutes to build the Elasticsearch indexes.
-   (*) on a Macbook Pro, 2.2 GHz Quad-Core Intel Core i7, 16 GB 1600 MHz DDR3 RAM)
+   * it takes around 75 mins for the environment to be ready if the code is not already on your computer
+
 
 3. Having at least 6GB of RAM for Docker is needed, mostly because the ElasticSearch indexing is very intensive.
 
