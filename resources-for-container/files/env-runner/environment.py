@@ -52,11 +52,11 @@ class Environment:
             raise RuntimeError(f"{repo_name} is not valid.")
 
         checkout_directory: str = f"{self.github_repos_directory}/{repo_name}"
-        repo_url: str = f"https://github.com/alphagov/{repo_name}.git"
 
         if os.path.isdir(checkout_directory):
             self.run_safe_shell_command("git pull --rebase", checkout_directory)
         else:
+            repo_url: str = f"https://github.com/alphagov/{repo_name}.git"
             self.run_safe_shell_command(f"git clone {repo_url} {checkout_directory}", self.github_repos_directory)
 
     def is_repo_name_valid(self, repo_name: str) -> bool:
