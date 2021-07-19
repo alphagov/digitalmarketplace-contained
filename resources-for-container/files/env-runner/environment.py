@@ -2,16 +2,16 @@ import os
 import subprocess
 import sys
 import traceback
-from typing import NoReturn, Set
-
 import yaml
+from typing import NoReturn
 from colored import fg, bg, attr  # type: ignore
+
+from repos_updater import *
 
 
 class Environment:
 
     POSTGRES_USER = "postgres"
-    SCRIPTS_REPO_NAME = "digitalmarketplace-scripts"
 
     def __init__(self, dry_run: bool):
         self.dry_run = dry_run
@@ -30,9 +30,10 @@ class Environment:
 
     def prepare_scripts(self) -> None:
         self.display_status_banner("Preparing scripts")
-        self.update_github_repo_checkout(self.SCRIPTS_REPO_NAME)
+        reposUpdater = ReposUpdater(self)
+        reposUpdater.update_local_scripts_repo()
         self.run_safe_shell_command(
-            "invoke requirements-dev", f"{self.github_repos_directory}/{self.SCRIPTS_REPO_NAME}")
+            "invoke requirements-dev", f"{self.github_repos_directory}/{reposUpdater.SCRIPTS_REPO_NAME}")
 
     def run_safe_shell_command(self, command: str, working_directory: str = None) -> None:
         if working_directory is None:
@@ -46,27 +47,6 @@ class Environment:
                 subprocess.run(command, cwd=working_directory, shell=True, check=True)
             except Exception as exception:
                 self.exit_with_error_message(exception)
-
-    def update_github_repo_checkout(self, repo_name: str) -> None:
-        if not self.is_repo_name_valid(repo_name):
-            raise RuntimeError(f"{repo_name} is not valid.")
-
-        checkout_directory: str = f"{self.github_repos_directory}/{repo_name}"
-
-        if os.path.isdir(checkout_directory):
-            self.run_safe_shell_command("git pull --rebase", checkout_directory)
-        else:
-            repo_url: str = f"https://github.com/alphagov/{repo_name}.git"
-            self.run_safe_shell_command(f"git clone {repo_url} {checkout_directory}", self.github_repos_directory)
-
-    def is_repo_name_valid(self, repo_name: str) -> bool:
-
-        apps_repo_names: Set[str] = {app['repo_name'] for app in self.configuration().get('apps', {}).values()}
-
-        valid_repo_names: Set[str] = apps_repo_names
-        valid_repo_names.add(self.SCRIPTS_REPO_NAME)
-
-        return repo_name in valid_repo_names
 
     @staticmethod
     def display_status_banner(status_text: str) -> None:
