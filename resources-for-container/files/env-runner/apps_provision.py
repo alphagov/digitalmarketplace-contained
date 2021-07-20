@@ -2,6 +2,7 @@ from typing import Optional, Dict
 
 from environment import Environment
 from repos_updater import ReposUpdater
+from utils import display_status_banner
 
 
 class AppsProvision:
@@ -24,11 +25,11 @@ class AppsProvision:
         if not repo_name:
             raise RuntimeError(f"A repository name couldn't be found for the app {app_name}")
 
-        Environment.display_status_banner(f"Preparing app: {app_name}")
+        display_status_banner(f"Preparing app: {app_name}")
 
         ReposUpdater(self.env).update_local_repo(repo_name)
 
-        app_code_directory: str = f"{self.env.github_repos_directory}/{repo_name}"
+        app_code_directory: str = f"{self.env.local_repos_directory}/{repo_name}"
 
         if self.clear_venv_and_node_modules:
             self.env.run_safe_shell_command("rm -rf venv", app_code_directory)
@@ -36,12 +37,9 @@ class AppsProvision:
 
         # TODO change the following line so that we don't run a command coming from config.yml
         # to minimise risk of shell/command injection
-        try:
-            self.env.run_safe_shell_command(bootstrap_command, app_code_directory)
-        except RuntimeError as error:
-            Environment.exit_with_error_message(error)
+        self.env.run_safe_shell_command(bootstrap_command, app_code_directory)
 
-        Environment.display_status_banner(f"Launching app: {app_name}")
+        display_status_banner(f"Launching app: {app_name}")
 
         # We need to launch the next command in the background (by appending &) as it runs "forever",
         # otherwise the setup process would be blocked by it

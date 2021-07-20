@@ -3,6 +3,7 @@ from abc import ABC
 import boto3  # type: ignore
 
 from environment import Environment
+from utils import display_status_banner
 
 
 class BackendService(ABC):
@@ -20,7 +21,7 @@ class BackendService(ABC):
         pass
 
     def provision(self) -> None:
-        Environment.display_status_banner("Starting backend service: " + self.__class__.__name__)
+        display_status_banner("Starting backend service: " + self.__class__.__name__)
         self.configure()
         self.launch()
         self.initialise()
@@ -94,5 +95,3 @@ class LocalstackBackendService(BackendService):
             )
         except s3.meta.client.exceptions.BucketAlreadyExists:
             pass
-        except Exception as exception:
-            Environment.exit_with_error_message(exception)
