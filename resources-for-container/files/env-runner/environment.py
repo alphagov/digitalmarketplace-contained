@@ -28,10 +28,10 @@ class Environment:
 
     def prepare_scripts(self) -> None:
         display_status_banner("Preparing scripts")
-        reposUpdater = ReposUpdater(self)
-        reposUpdater.update_local_scripts_repo()
+        repos_updater = ReposUpdater(self)
+        repos_updater.update_local_scripts_repo()
         self.run_safe_shell_command(
-            "invoke requirements-dev", f"{self.local_repos_directory}/{reposUpdater.SCRIPTS_REPO_NAME}")
+            "invoke requirements-dev", f"{self.local_repos_directory}/{repos_updater.SCRIPTS_REPO_NAME}")
 
     def run_safe_shell_command(self, command: str, working_directory: str = None) -> None:
         if working_directory is None:
