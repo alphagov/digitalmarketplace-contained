@@ -109,6 +109,16 @@ onto the container - typically, those utilities need to be run on the container.
 Ideally, we will have time to provide a more integrated and convenient management "consolle" at some point.
 
 ## TODO
+* Smaller refactoring / improvements that should be done next:
+  * finish the work in the branch `ci` to introduce tests and checks on Github
+  * fix design flow: backend should be initialised independently to whether they were provisioned internally or 
+    externally
+  * test backends services are accepting incoming requests before provisioning apps
+  * --dry-run will fail miserably if the repos are not already checked out - not something to fix probably but just to 
+    manage better
+  * remove type hints from within methods (suggested in a code review)
+  * try to have localStack run within the container
+    
 * Look at `TODO` comments in the files
 * Must haves
   * Protect the Github main branch and require review for integration
