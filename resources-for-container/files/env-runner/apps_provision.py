@@ -2,7 +2,7 @@ from typing import Optional, Dict
 
 from environment import Environment
 from repos_updater import ReposUpdater
-from utils import display_status_banner, exit_with_error_message
+from utils import display_status_banner
 
 
 class AppsProvision:
@@ -37,10 +37,7 @@ class AppsProvision:
 
         # TODO change the following line so that we don't run a command coming from config.yml
         # to minimise risk of shell/command injection
-        try:
-            self.env.run_safe_shell_command(bootstrap_command, app_code_directory)
-        except RuntimeError as error:
-            exit_with_error_message(error)
+        self.env.run_safe_shell_command(bootstrap_command, app_code_directory)
 
         display_status_banner(f"Launching app: {app_name}")
 

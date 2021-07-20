@@ -3,7 +3,7 @@ from abc import ABC
 import boto3  # type: ignore
 
 from environment import Environment
-from utils import display_status_banner, exit_with_error_message
+from utils import display_status_banner
 
 
 class BackendService(ABC):
@@ -95,5 +95,3 @@ class LocalstackBackendService(BackendService):
             )
         except s3.meta.client.exceptions.BucketAlreadyExists:
             pass
-        except Exception as exception:
-            exit_with_error_message(exception)
