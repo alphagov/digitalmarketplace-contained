@@ -6,7 +6,7 @@ import yaml
 from typing import NoReturn
 from colored import fg, bg, attr  # type: ignore
 
-from repos_updater import *
+from repos_updater import ReposUpdater
 
 
 class Environment:
@@ -33,7 +33,7 @@ class Environment:
         reposUpdater = ReposUpdater(self)
         reposUpdater.update_local_scripts_repo()
         self.run_safe_shell_command(
-            "invoke requirements-dev", f"{self.github_repos_directory}/{reposUpdater.SCRIPTS_REPO_NAME}")
+            "invoke requirements-dev", f"{self.local_repos_directory}/{reposUpdater.SCRIPTS_REPO_NAME}")
 
     def run_safe_shell_command(self, command: str, working_directory: str = None) -> None:
         if working_directory is None:
@@ -65,6 +65,6 @@ class Environment:
     def _construct_common_directory_paths(self) -> None:
         this_script_directory = os.path.abspath(os.path.dirname(__file__))
         self.mount_directory: str = f"{this_script_directory}/../../mount"
-        self.github_repos_directory: str = f"{self.mount_directory}/github-repos"
+        self.local_repos_directory: str = f"{self.mount_directory}/local-repos"
         self.runner_directory: str = this_script_directory
         # TODO raise error if directories don't exist

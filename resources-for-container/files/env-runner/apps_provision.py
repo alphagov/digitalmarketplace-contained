@@ -28,7 +28,7 @@ class AppsProvision:
 
         ReposUpdater(self.env).update_local_repo(repo_name)
 
-        app_code_directory: str = f"{self.env.github_repos_directory}/{repo_name}"
+        app_code_directory: str = f"{self.env.local_repos_directory}/{repo_name}"
 
         if self.clear_venv_and_node_modules:
             self.env.run_safe_shell_command("rm -rf venv", app_code_directory)

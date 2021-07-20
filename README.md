@@ -95,7 +95,7 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
 7. In the container, run `/usr/local/bin/python3.6 start.py` (use the `--help` option for seeing all the options
    available when running the script) 
 
-__This step will checkout the code into `/resources-for-container/mount/github-repos`. If the code was already
+__This step will checkout the code into `/resources-for-container/mount/local-repos`. If the code was already
 checked out, it will perform a `git pull --rebase` on all the checkout folders.__
 
 When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a

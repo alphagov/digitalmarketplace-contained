@@ -17,14 +17,14 @@ class ReposUpdater:
         if not self.is_repo_name_valid(repo_name):
             raise RuntimeError(f"{repo_name} is not valid.")
 
-        checkout_directory: str = f"{self.env.github_repos_directory}/{repo_name}"
+        checkout_directory: str = f"{self.env.local_repos_directory}/{repo_name}"
 
         if os.path.isdir(checkout_directory):
             self.env.run_safe_shell_command("git pull --rebase", checkout_directory)
         else:
             repo_url: str = f"https://github.com/alphagov/{repo_name}.git"
             self.env.run_safe_shell_command(
-                f"git clone {repo_url} {checkout_directory}", self.env.github_repos_directory)
+                f"git clone {repo_url} {checkout_directory}", self.env.local_repos_directory)
 
     def update_local_scripts_repo(self) -> None:
         self.update_local_repo(self.SCRIPTS_REPO_NAME)
