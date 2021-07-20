@@ -2,6 +2,7 @@ from typing import Optional, Dict
 
 from environment import Environment
 from repos_updater import ReposUpdater
+from utils import display_status_banner, exit_with_error_message
 
 
 class AppsProvision:
@@ -24,7 +25,7 @@ class AppsProvision:
         if not repo_name:
             raise RuntimeError(f"A repository name couldn't be found for the app {app_name}")
 
-        Environment.display_status_banner(f"Preparing app: {app_name}")
+        display_status_banner(f"Preparing app: {app_name}")
 
         ReposUpdater(self.env).update_local_repo(repo_name)
 
@@ -39,9 +40,9 @@ class AppsProvision:
         try:
             self.env.run_safe_shell_command(bootstrap_command, app_code_directory)
         except RuntimeError as error:
-            Environment.exit_with_error_message(error)
+            exit_with_error_message(error)
 
-        Environment.display_status_banner(f"Launching app: {app_name}")
+        display_status_banner(f"Launching app: {app_name}")
 
         # We need to launch the next command in the background (by appending &) as it runs "forever",
         # otherwise the setup process would be blocked by it

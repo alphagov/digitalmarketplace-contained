@@ -1,11 +1,9 @@
 import os
 import subprocess
-import sys
-import traceback
 import yaml
-from typing import NoReturn
 from colored import fg, bg, attr  # type: ignore
 
+from utils import display_status_banner, exit_with_error_message
 from repos_updater import ReposUpdater
 
 
@@ -24,12 +22,12 @@ class Environment:
                     configuration: dict = yaml.safe_load(stream)
                     return configuration
                 except yaml.YAMLError as yaml_exception:
-                    Environment.exit_with_error_message(yaml_exception)
+                    exit_with_error_message(yaml_exception)
         except FileNotFoundError as file_exception:
-            Environment.exit_with_error_message(file_exception)
+            exit_with_error_message(file_exception)
 
     def prepare_scripts(self) -> None:
-        self.display_status_banner("Preparing scripts")
+        display_status_banner("Preparing scripts")
         reposUpdater = ReposUpdater(self)
         reposUpdater.update_local_scripts_repo()
         self.run_safe_shell_command(
@@ -46,21 +44,7 @@ class Environment:
             try:
                 subprocess.run(command, cwd=working_directory, shell=True, check=True)
             except Exception as exception:
-                self.exit_with_error_message(exception)
-
-    @staticmethod
-    def display_status_banner(status_text: str) -> None:
-        print(f"{fg('white')}{bg('blue')}{attr('bold')} {status_text} {attr('reset')}")
-
-    @staticmethod
-    def exit_with_error_message(exception: Exception) -> NoReturn:
-        exception_message: str = str(exception)
-        print(
-            f"{fg('white')}{bg('red')}{attr('bold')} "
-            f"An error has occurred and the program is terminating {os.linesep} Error: {exception_message} "
-            f"{attr('reset')}")
-        print(traceback.format_exc())
-        sys.exit(exception_message)
+                exit_with_error_message(exception)
 
     def _construct_common_directory_paths(self) -> None:
         this_script_directory = os.path.abspath(os.path.dirname(__file__))

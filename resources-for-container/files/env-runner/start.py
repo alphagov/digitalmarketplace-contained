@@ -4,6 +4,7 @@ from apps_provision import AppsProvision
 from backend_services_provision import BackendServicesProvision
 from backend_services_data_importer import BackendServicesDataImporter
 from environment import Environment
+from utils import display_status_banner
 
 parser = ArgumentParser(description="Starts a Digitalmarketplace environment.")
 parser.add_argument('--dry-run',
@@ -23,7 +24,7 @@ args = parser.parse_args()
 
 env = Environment(args.dry_run)
 
-env.display_status_banner("SETUP STARTED")
+display_status_banner("SETUP STARTED")
 env.prepare_scripts()
 
 if not args.without_provisioning_backend_services:

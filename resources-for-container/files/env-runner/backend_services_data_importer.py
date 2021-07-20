@@ -1,4 +1,5 @@
 from environment import Environment
+from utils import display_status_banner
 
 
 class BackendServicesDataImporter:
@@ -7,7 +8,7 @@ class BackendServicesDataImporter:
         self.env = env
 
     def populate_postgres_with_test_data(self) -> None:
-        self.env.display_status_banner("Populating Postgres with test data")
+        display_status_banner("Populating Postgres with test data")
 
         test_data_dump_filepath: str = self.env.mount_directory + "/test_data.sql"
         # TODO raise error if test data file is not found
@@ -16,7 +17,7 @@ class BackendServicesDataImporter:
             f'psql --user {self.env.POSTGRES_USER} --dbname digitalmarketplace --file {test_data_dump_filepath}')
 
     def build_elasticsearch_indexes(self) -> None:
-        self.env.display_status_banner("Building Elasticsearch indexes")
+        display_status_banner("Building Elasticsearch indexes")
 
         scripts_directory: str = f"{self.env.local_repos_directory}/digitalmarketplace-scripts"
 
