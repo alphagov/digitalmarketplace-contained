@@ -1,6 +1,8 @@
 FROM python:3.6-slim-buster
 
 EXPOSE 80
+# these ports are proxied to the api apps (by nginx) as needed by the functional tests
+EXPOSE 55000 55009
 
 USER root
 

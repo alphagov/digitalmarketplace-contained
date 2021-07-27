@@ -87,6 +87,8 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
   --name dmp-contained \
   --net=dmp-contained \
   -p 80:80 \
+  -p 55000:55000 \
+  -p 55009:55009 \
   --mount type=bind,source="$(pwd)"/resources-for-container/mount,target=/dmp-contained/mount \
   dmp-contained /bin/bash
   ``` 
@@ -100,6 +102,21 @@ checked out, it will perform a `git pull --rebase` on all the checkout folders._
 
 When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a
 DMp webpage (or most likely a Flask error page from the container at this stage of development).
+
+## Running the functional tests
+
+To run the [functional tests](https://github.com/alphagov/digitalmarketplace-functional-tests) against the environment,
+you need to:
+- have the `dmp-contained` environment running
+- clone the [functional tests](https://github.com/alphagov/digitalmarketplace-functional-tests) repository and follow
+the instructions there. You will need to set `55000` and `55009` as api and search-api ports respectively
+  (that is the original ports with an extra `5` at the start) in the
+[configuration file of the functional tests](https://github.com/alphagov/digitalmarketplace-functional-tests/blob/main/config/local.example.sh).
+
+Those two ports will be proxied to the api apps by nginx. It would have been nice if
+we didn't need this extra step and we could have used the apps ports directly from the host. That may be possible with some
+nginx and/or Docker network configuration change. One other solution may be to have the flask api apps run on
+`localhost` rather than `127.0.0.1`.
 
 ## Managing the environment
 

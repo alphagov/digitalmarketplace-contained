@@ -35,7 +35,6 @@ class ReposUpdater:
     def _valid_repo_names(self) -> Set[str]:
         apps_repo_names: Set[str] = {app['repo_name'] for app in self.env.configuration().get('apps', {}).values()}
 
-        valid_repo_names: Set[str] = apps_repo_names
-        valid_repo_names.add(self.SCRIPTS_REPO_NAME)
+        valid_repo_names: Set[str] = apps_repo_names | {self.SCRIPTS_REPO_NAME}
 
         return valid_repo_names
