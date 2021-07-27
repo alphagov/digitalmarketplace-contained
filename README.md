@@ -116,7 +116,7 @@ the instructions there. You will need to set `55000` and `55009` as api and sear
 Those two ports will be proxied to the api apps by nginx. It would have been nice if
 we didn't need this extra step and we could have used the apps ports directly from the host. That may be possible with some
 nginx and/or Docker network configuration change. One other solution may be to have the flask api apps run on
-`localhost` rather than `127.0.0.1`.
+`0.0.0.0` rather than `127.0.0.1` ([detailed explanation](https://pythonspeed.com/articles/docker-connection-refused/)).
 
 ## Managing the environment
 
