@@ -106,8 +106,8 @@ DMp webpage (or most likely a Flask error page from the container at this stage 
 ## Running the functional tests
 
 To run the [functional tests](https://github.com/alphagov/digitalmarketplace-functional-tests) against the environment,
-set `55000` and `55009` as api and search-api ports respectively (that is the original ports with an extra `5` at
-the start).
+you just need to set `55000` and `55009` as api and search-api ports respectively (that is the original ports with an extra `5` at
+the start) in the configuration file of the functional tests - no change is needed on `dmp-contained`.
 
 Those two ports will be proxied to the api apps by nginx. It would have been nice if
 we didn't need this extra step and we could have used the apps ports directly from the host. That may be possible with some
