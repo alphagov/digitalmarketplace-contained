@@ -1,9 +1,33 @@
 import os
 from abc import ABC
+from typing import List
+
 import boto3  # type: ignore
 
 from environment import Environment
 from utils import display_status_banner
+
+
+class BackendServices:
+
+    def __init__(self, env: Environment):
+        self.env = env
+
+        self.services: List[BackendService] = [
+            NginxBackendService(self.env),
+            RedisBackendService(self.env),
+            PostgresBackendService(self.env),
+            ElasticsearchBackendService(self.env),
+            LocalstackBackendService(self.env)
+        ]
+
+    def provision_services(self) -> None:
+        for service in self.services:
+            service.provision()
+
+    def initialise_services(self) -> None:
+        for service in self.services:
+            service.initialise()
 
 
 class BackendService(ABC):
@@ -24,7 +48,6 @@ class BackendService(ABC):
         display_status_banner("Starting backend service: " + self.__class__.__name__)
         self.configure()
         self.launch()
-        self.initialise()
 
 
 class NginxBackendService(BackendService):

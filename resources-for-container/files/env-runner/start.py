@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 
 from apps_provision import AppsProvision
-from backend_services_provision import BackendServicesProvision
+from backend_services import BackendServices
 from backend_services_data_importer import BackendServicesDataImporter
 from environment import Environment
 from utils import display_status_banner, exit_with_error_message
@@ -28,9 +28,12 @@ try:
     display_status_banner("SETUP STARTED")
     env.prepare_scripts()
 
+    backend_services = BackendServices(env)
+
     if not args.without_provisioning_backend_services:
-        BackendServicesProvision(env)\
-            .provision_services()
+        backend_services.provision_services()
+
+    backend_services.initialise_services()
 
     AppsProvision(env, args.clear_venv_and_node_modules)\
         .provision_all_apps()
