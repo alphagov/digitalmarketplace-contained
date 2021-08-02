@@ -10,7 +10,7 @@ try:
     parser = ArgumentParser(description="Starts a Digitalmarketplace environment.")
     parser.add_argument('--dry-run',
                         action='store_true', dest='dry_run', default=False,
-                        help="shell commands are not run.")
+                        help="shell commands are not run. This will fail if the repositories are not cloned locally.")
     parser.add_argument('--without-provisioning-backend-services',
                         action='store_true', dest='without_provisioning_backend_services', default=False,
                         help="""backend services are not provisioned as part of this container -
