@@ -28,13 +28,17 @@ class Environment:
             "invoke requirements-dev", f"{self.local_repos_directory}/{repos_updater.SCRIPTS_REPO_NAME}")
 
     def run_safe_shell_command(self, command: str, working_directory: str = None) -> None:
+        """N.B. The `command` argument needs to be from a trusted source to avoid command injections,
+        as `subprocess.run()` with `shell=True` is used in this method.
+        See https://docs.python.org/3/library/subprocess.html#security-considerations
+        """
         if working_directory is None:
             working_directory = os.getcwd()
         if not os.path.isdir(working_directory):
             raise OSError(f"Working directory {working_directory} not found; unable to run shell command.")
         print(f"{fg('white')}{bg('green')} > Running command: {command} {attr(0)}")
         if not self.dry_run:
-            # TODO command should be a list to prevent command injection attacks
+            # See security note at the top of the method
             subprocess.run(command, cwd=working_directory, shell=True, check=True)
 
     def _construct_common_directory_paths(self) -> None:
