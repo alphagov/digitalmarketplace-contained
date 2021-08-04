@@ -126,28 +126,16 @@ onto the container - typically, those utilities need to be run on the container.
 Ideally, we will have time to provide a more integrated and convenient management "consolle" at some point.
 
 ## TODO
-* Smaller refactoring / improvements that should be done next:
-  * finish the work in the branch `ci` to introduce tests and checks on Github
-  * fix design flow: backend should be initialised independently to whether they were provisioned internally or 
-    externally
-  * test backends services are accepting incoming requests before provisioning apps
-  * --dry-run will fail miserably if the repos are not already checked out - not something to fix probably but just to 
-    manage better
-  * remove type hints from within methods (suggested in a code review)
-  * try to have localStack run within the container
-    
-* Look at `TODO` comments in the files
-* Must haves
-  * Protect the Github main branch and require review for integration
-  * Clean up and refactor the code to make it very maintainable and easy-to-follow
-  * Review how we can make the container more observable and easier to troubleshoot problems
-  * Add implementation for S3
-  * Ensure we can run automated tests against the environment
-* Nice to haves
+
+Firstly, there are `TODO` notes in the code, so worth having a look at them.
+
+Possible improvements that may be considered are:
+* Having Localstack running inside the `dmp-contained`
+* Being able to deploy `dmp-contained` to GOV.UK PaaS, ideally in an automated manner
+* Being able to navigate through the journeys that use emails (e.g. user signup)
+* Generate test data within the container, therefore removing the need to have an existing test dataset
+
+Some nice to haves could be:
   * Add automated regression tests
-  * Improve speed of the setup (e.g. caching, parallelisation)
-  * Make the step of running the `start.py` automatic.
-    * I really wanted to add this as last step of the Dockerfile (`CMD /usr/local/python3 start.py`)
-      however the problem was that the start script needs the `mount` folder to be mounted
-      but that can't be done in the Dockerfile.
-      There must be a proper solution/pattern for this. Maybe worth asking a Docker expert.
+  * Improve speed of the setup (e.g. via caching, parallelisation)
+  * Make the step of running the `start.py` automatic when the container is run
