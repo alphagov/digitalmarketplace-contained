@@ -101,7 +101,7 @@ __This step will checkout the code into `/resources-for-container/mount/local-re
 checked out, it will perform a `git pull --rebase` on all the checkout folders.__
 
 When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a
-DMp webpage (or most likely a Flask error page from the container at this stage of development).
+DMp webpage.
 
 ## Running the functional tests
 
@@ -123,7 +123,7 @@ nginx and/or Docker network configuration change. One other solution may be to h
 Utilities to manage the environment can be found in the `resources-for-container/files/utils` folder, which is copied
 onto the container - typically, those utilities need to be run on the container.
 
-Ideally, we will have time to provide a more integrated and convenient management "consolle" at some point.
+Ideally, we will have time to provide a more integrated and convenient management "console" at some point.
 
 ## TODO
 * Smaller refactoring / improvements that should be done next:
