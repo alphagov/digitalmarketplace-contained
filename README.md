@@ -135,7 +135,7 @@ Ideally, we will have time to provide a more integrated and convenient managemen
     manage better
   * remove type hints from within methods (suggested in a code review)
   * try to have localStack run within the container
-    
+
 * Look at `TODO` comments in the files
 * Must haves
   * Protect the Github main branch and require review for integration
@@ -151,3 +151,7 @@ Ideally, we will have time to provide a more integrated and convenient managemen
       however the problem was that the start script needs the `mount` folder to be mounted
       but that can't be done in the Dockerfile.
       There must be a proper solution/pattern for this. Maybe worth asking a Docker expert.
+
+## Licence
+
+[MIT License](LICENCE)
