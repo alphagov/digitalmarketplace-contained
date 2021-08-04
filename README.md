@@ -4,8 +4,17 @@
 
 ## Goal
 
-To be able to run the Digitalmarketplace web service on a single Docker container for 
-exploration, prototyping, development and testing purposes, in a way that is easy also for non-developers.
+To provide a relatively simple way of launching a copy of the Digital Marketplace website loaded with test data.
+
+Some likely users could be:
+
+- people outside the team (and even outside the organisation) who would like to be free to explore how the service works
+- architects who would like to have a Digital Marketplace environment running on their computer
+  (with Docker being the only dependency)
+- product managers, designers, user researchers who would like to explore and use the service in their own time
+- developers who would like to be able to "spin" a Digital Marketplace environment for testing purposes
+ (e.g. running overnight tests of the current code against all the states of a framework)
+
 
 ## Caveats
 
