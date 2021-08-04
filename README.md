@@ -47,7 +47,7 @@ At the time of writing, on a Macbook Pro, 2.2 GHz Quad-Core Intel Core i7, 16 GB
 
 ## Requirements
 
-Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch indexing is very intensive)
+Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch indexing is very intensive). You may need to increase Docker's memory allocation, for example in the [Docker Desktop for Mac preferences](https://docs.docker.com/docker-for-mac/#resources).
 
 
 ## How to run this project
