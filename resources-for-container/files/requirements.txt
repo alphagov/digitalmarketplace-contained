@@ -56,6 +56,8 @@ toml==0.10.2
     # via mypy
 typed-ast==1.4.3
     # via mypy
+types-pyyaml==5.4.3
+    # via -r requirements.in
 typing-extensions==3.10.0.0
     # via
     #   importlib-metadata

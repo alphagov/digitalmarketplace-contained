@@ -8,3 +8,4 @@ pyyaml
 flake8
 mypy
 boto3
+types-PyYAML
