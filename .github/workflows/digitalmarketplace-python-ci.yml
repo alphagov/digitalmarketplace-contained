@@ -37,4 +37,4 @@ jobs:
       if: steps.python-cache.outputs.cache-hit != 'true'
 
     - name: Run python tests
-      run: invoke test-flake test-mypy
+      run: invoke test-flake8 test-mypy
