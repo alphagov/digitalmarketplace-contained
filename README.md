@@ -8,7 +8,6 @@ To provide a relatively simple way of launching a copy of the Digital Marketplac
 
 Some likely users could be:
 
-- people outside the team (and even outside the organisation) who would like to be free to explore how the service works
 - architects who would like to have a Digital Marketplace environment running on their computer
   (with Docker being the only dependency)
 - product managers, designers, user researchers who would like to explore and use the service in their own time
