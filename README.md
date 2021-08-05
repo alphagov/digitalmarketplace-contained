@@ -139,3 +139,7 @@ Some nice to haves could be:
   * Add automated regression tests
   * Improve speed of the setup (e.g. via caching, parallelisation)
   * Make the step of running the `start.py` automatic when the container is run
+
+## Licence
+
+[MIT License](LICENCE)
