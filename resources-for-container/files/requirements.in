@@ -1,6 +1,6 @@
 argparse
 colored
-dataclasses
+dataclasses;python_version<"3.7"
 digitalmarketplace-developer-tools
 invoke
 redis
