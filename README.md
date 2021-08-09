@@ -133,6 +133,70 @@ onto the container - typically, those utilities need to be run on the container.
 
 Ideally, we will have time to provide a more integrated and convenient management "console" at some point.
 
+## Running on GOV.UK PaaS
+
+Let's suppose you want to publish the new tag 0.1.0 and running it on the PaaS
+
+### Create the new tag on Github
+
+From the checkout of this repository, run:
+```
+$ git tag 0.1.0
+$ git push origin --tags
+```
+
+### Tag the Docker image and push it to Github Container Repository (GHCR)
+
+```
+$ docker build -t dmp-contained:0.1.0 .
+$ docker image tag dmp-contained:0.1.0 ghcr.io/alphagov/dmp-contained:0.1.0
+```
+
+Ensure your docker daemon is logged into ghcr:
+```
+docker login ghcr.io
+```
+(the password is actually a Github token with the right permissions for ghcr)
+
+```
+$ docker push ghcr.io/alphagov/dmp-contained:0.1.0
+```
+
+### Push the image onto PaaS
+
+* Ensure you are logged in to GOV.UK PaaS.
+
+* Set a target
+
+```
+cf target -o ORG_NAME -s SPACE_NAME
+```
+
+* Set your Github Access Token as the `CF_DOCKER_PASSWORD` env var
+
+* Push the image:
+```
+cf push \
+--docker-image ghcr.io/alphagov/dmp-contained:0.1.0 \
+--docker-username YOUR-GITHUB-USERNAME \
+-k 6g -m 6g \
+--health-check-type process
+```
+
+`--health-check-type process` disables the healthcheck.
+
+At this point you should be able to visit `http://https://dmp-contained.cloudapps.digital/` and get a 502 HTTP error
+
+### Setup of the container
+
+```
+cf ssh dmp-contained
+```
+
+
+
+
+
 ## TODO
 
 Firstly, there are `TODO` notes in the code, so worth having a look at them.
