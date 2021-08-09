@@ -26,6 +26,7 @@ try:
     env = Environment(args.dry_run)
 
     display_status_banner("SETUP STARTED")
+
     env.prepare_scripts()
 
     backend_services = BackendServices(env)
@@ -41,5 +42,7 @@ try:
     backendServicesDataImporter = BackendServicesDataImporter(env)
     backendServicesDataImporter.populate_postgres_with_test_data()
     backendServicesDataImporter.build_elasticsearch_indexes()
+
+    display_status_banner("SETUP COMPLETED. You can now use the environment.")
 except Exception as e:
     exit_with_error_message(e)
