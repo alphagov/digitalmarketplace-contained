@@ -58,7 +58,7 @@ At the time of writing, on a Macbook Pro, 2.2 GHz Quad-Core Intel Core i7, 16 GB
 Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch indexing is very intensive). You may need to increase Docker's memory allocation, for example in the [Docker Desktop for Mac preferences](https://docs.docker.com/docker-for-mac/#resources).
 
 
-## How to run this project
+## How to run this project locally
 
 1. Clone this repo
 
@@ -111,7 +111,7 @@ checked out, it will perform a `git pull --rebase` on all the checkout folders._
 When this script ends you should be able to hit `http://localhost` from your browser (host environment) and see a
 DMp webpage.
 
-## Running the functional tests
+### Running the functional tests
 
 To run the [functional tests](https://github.com/alphagov/digitalmarketplace-functional-tests) against the environment,
 you need to:
@@ -126,7 +126,7 @@ we didn't need this extra step and we could have used the apps ports directly fr
 nginx and/or Docker network configuration change. One other solution may be to have the flask api apps run on
 `0.0.0.0` rather than `127.0.0.1` ([detailed explanation](https://pythonspeed.com/articles/docker-connection-refused/)).
 
-## Managing the environment
+### Managing the environment
 
 Utilities to manage the environment can be found in the `resources-for-container/files/utils` folder, which is copied
 onto the container - typically, those utilities need to be run on the container.
