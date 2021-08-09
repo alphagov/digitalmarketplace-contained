@@ -15,7 +15,7 @@ class ReposUpdater:
 
     def update_local_repo(self, repo_name: str) -> None:
         if not self.is_repo_name_valid(repo_name):
-            raise RuntimeError(f"{repo_name} is not valid.")
+            raise RuntimeError(f"{repo_name} is not a valid repository name.")
 
         checkout_directory: str = f"{self.env.local_repos_directory}/{repo_name}"
 
