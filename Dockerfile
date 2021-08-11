@@ -42,8 +42,8 @@ RUN mkdir /dmp-contained
 
 COPY ./resources-for-container/files /dmp-contained/files
 
-WORKDIR /dmp-contained/files/env-runner
+RUN cd /dmp-contained/files && pip install -r requirements.txt
 
-RUN pip install -r requirements.in
+WORKDIR /dmp-contained/files/env-runner
 
 # CMD ["/usr/local/bin/python3.6", "start.py"]
