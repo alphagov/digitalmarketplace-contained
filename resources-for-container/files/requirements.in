@@ -1,11 +1,11 @@
 argparse
+boto3
 colored
 dataclasses;python_version<"3.7"
 digitalmarketplace-developer-tools
-invoke
-redis
-pyyaml
 flake8
+invoke
 mypy
-boto3
+pyyaml
+redis
 types-PyYAML
