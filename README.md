@@ -102,7 +102,7 @@ Docker, with a reservation of at least 6GB of RAM (that is because Elasticsearch
   ``` 
   This is going to open up a shell on the container
 
-7. In the container, run `/usr/local/bin/python3.6 start.py` (use the `--help` option for seeing all the options
+7. In the container, run `python3.6 start.py` (use the `--help` option for seeing all the options
    available when running the script) 
 
 __This step will checkout the code into `/resources-for-container/mount/local-repos`. If the code was already
@@ -135,15 +135,25 @@ Ideally, we will have time to provide a more integrated and convenient managemen
 
 ## Running on GOV.UK PaaS
 
-Let's suppose you want to publish the new tag 0.1.0 and running it on the PaaS
+We can't push the container directly to GOV.UK PaaS, so we'll need to use the Github Containers Repository (GHCR)
+"as a bridge".
 
-### Create the new tag on Github
+The overall process looks like
 
-From the checkout of this repository, run:
-```
-$ git tag 0.1.0
-$ git push origin --tags
-```
+- tag the image locally
+- push it to GHCR
+- push that to GOV.UK PaaS
+- ssh into the running app and start the environment
+
+### Choose a reference
+
+So we are going to tag an image that we are going to push to a couple of places.
+
+We could tag the image as `latest` but that we'd lose sight of the exact code running on that image.
+
+So a better choice would be to use a git commit id or a git tag (if you decided to created one).
+
+Hereafter we are going to assume you want to use `0.1.0` as a tag
 
 ### Tag the Docker image and push it to Github Container Repository (GHCR)
 
@@ -156,7 +166,7 @@ Ensure your docker daemon is logged into ghcr:
 ```
 docker login ghcr.io
 ```
-(the password is actually a Github token with the right permissions for ghcr)
+(if you are asked for a password, that is actually a Github personal token with the right permissions for pushing images to ghcr)
 
 ```
 $ docker push ghcr.io/alphagov/dmp-contained:0.1.0
@@ -174,7 +184,7 @@ cf target -o ORG_NAME -s SPACE_NAME
 
 * Set your Github Access Token as the `CF_DOCKER_PASSWORD` env var
 
-* Push the image:
+* Push the image (**make sure you replace YOUR-GITHUB-USERNAME in the command below**):
 ```
 cf push \
 --docker-image ghcr.io/alphagov/dmp-contained:0.1.0 \
@@ -184,17 +194,23 @@ cf push \
 
 `--health-check-type process` disables the healthcheck.
 
-At this point you should be able to visit `http://https://dmp-contained.cloudapps.digital/` and get a 502 HTTP error
+At this point you should be able to visit `http://dmp-contained.cloudapps.digital/` and get a 502 HTTP error
 
 ### Setup of the container
 
+SSH into the container:
 ```
 cf ssh dmp-contained
 ```
+Run the script to initialise the container to be ready to run the startup script
+```
+/usr/local/bin/python3.6 /dmp-contained/files/utils/init_paas_container.py
+```
 
-
-
-
+Now you should be able to launch the start script:
+```
+python3.6 /dmp-contained/files/env-runner/start.py
+```
 
 ## TODO
 
