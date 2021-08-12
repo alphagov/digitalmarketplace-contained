@@ -1,3 +1,6 @@
 ---
 applications:
 - name: dmp-contained
+  menory: 6GB
+  disk_quota: 6GB
+

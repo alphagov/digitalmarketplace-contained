@@ -179,7 +179,6 @@ cf target -o ORG_NAME -s SPACE_NAME
 cf push \
 --docker-image ghcr.io/alphagov/dmp-contained:0.1.0 \
 --docker-username YOUR-GITHUB-USERNAME \
--k 6g -m 6g \
 --health-check-type process
 ```
 
