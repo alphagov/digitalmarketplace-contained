@@ -27,6 +27,8 @@ try:
 
     display_status_banner("SETUP STARTED")
 
+    backendServicesDataImporter = BackendServicesDataImporter(env)  # also checks that test data file is present
+
     env.prepare_scripts()
 
     backend_services = BackendServices(env)
@@ -39,7 +41,6 @@ try:
     AppsProvision(env, args.clear_venv_and_node_modules)\
         .provision_all_apps()
 
-    backendServicesDataImporter = BackendServicesDataImporter(env)
     backendServicesDataImporter.populate_postgres_with_test_data()
     backendServicesDataImporter.build_elasticsearch_indexes()
 
