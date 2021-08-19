@@ -24,10 +24,9 @@ try:
     args = parser.parse_args()
 
     env = Environment(args.dry_run)
+    backendServicesDataImporter = BackendServicesDataImporter(env)
 
     display_status_banner("SETUP STARTED")
-
-    backendServicesDataImporter = BackendServicesDataImporter(env)  # also checks that test data file is present
 
     env.prepare_scripts()
 
