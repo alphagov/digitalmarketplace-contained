@@ -8,9 +8,7 @@ class BackendServicesDataImporter:
 
     def __init__(self, env: Environment):
         self.env = env
-        self.test_data_dump_filepath: str = self.env.mount_directory + "/test_data.sql"
-
-        self._check_test_data_file_is_present()
+        self.test_data_dump_filepath = self._get_test_data_dump_filepath()
 
     def populate_postgres_with_test_data(self) -> None:
         display_status_banner("Populating Postgres with test data")
@@ -37,6 +35,8 @@ class BackendServicesDataImporter:
             --frameworks=digital-outcomes-and-specialists-4 \
             --create-with-mapping=briefs-digital-outcomes-and-specialists-2""", scripts_directory)
 
-    def _check_test_data_file_is_present(self):
-        if not os.path.isfile(self.test_data_dump_filepath):
-            raise OSError(f"Test data file {self.test_data_dump_filepath} couldn't be found.")
+    def _get_test_data_dump_filepath(self) -> str:
+        test_data_dump_filepath = os.path.join(self.env.mount_directory, 'test_data.sql')
+        if not os.path.isfile(test_data_dump_filepath):
+            raise OSError(f"Test data file {test_data_dump_filepath} couldn't be found.")
+        return test_data_dump_filepath
