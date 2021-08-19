@@ -24,6 +24,7 @@ try:
     args = parser.parse_args()
 
     env = Environment(args.dry_run)
+    backendServicesDataImporter = BackendServicesDataImporter(env)
 
     display_status_banner("SETUP STARTED")
 
@@ -39,7 +40,6 @@ try:
     AppsProvision(env, args.clear_venv_and_node_modules)\
         .provision_all_apps()
 
-    backendServicesDataImporter = BackendServicesDataImporter(env)
     backendServicesDataImporter.populate_postgres_with_test_data()
     backendServicesDataImporter.build_elasticsearch_indexes()
 

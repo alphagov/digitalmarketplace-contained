@@ -1,3 +1,5 @@
+import os
+
 from environment import Environment
 from utils import display_status_banner
 
@@ -6,15 +8,13 @@ class BackendServicesDataImporter:
 
     def __init__(self, env: Environment):
         self.env = env
+        self.test_data_dump_filepath = self._get_test_data_dump_filepath()
 
     def populate_postgres_with_test_data(self) -> None:
         display_status_banner("Populating Postgres with test data")
 
-        test_data_dump_filepath: str = self.env.mount_directory + "/test_data.sql"
-        # TODO raise error if test data file is not found
-
         self.env.run_safe_shell_command(
-            f'psql --user {self.env.POSTGRES_USER} --dbname digitalmarketplace --file {test_data_dump_filepath}')
+            f'psql --user {self.env.POSTGRES_USER} --dbname digitalmarketplace --file {self.test_data_dump_filepath}')
 
     def build_elasticsearch_indexes(self) -> None:
         display_status_banner("Building Elasticsearch indexes")
@@ -34,3 +34,9 @@ class BackendServicesDataImporter:
             --index=briefs-digital-outcomes-and-specialists \
             --frameworks=digital-outcomes-and-specialists-4 \
             --create-with-mapping=briefs-digital-outcomes-and-specialists-2""", scripts_directory)
+
+    def _get_test_data_dump_filepath(self) -> str:
+        test_data_dump_filepath = os.path.join(self.env.mount_directory, 'test_data.sql')
+        if not os.path.isfile(test_data_dump_filepath):
+            raise OSError(f"Test data file {test_data_dump_filepath} couldn't be found.")
+        return test_data_dump_filepath
