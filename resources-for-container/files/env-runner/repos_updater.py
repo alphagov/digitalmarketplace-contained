@@ -22,7 +22,7 @@ class ReposUpdater:
         if os.path.isdir(checkout_directory):
             self.env.run_safe_shell_command("git pull --rebase", checkout_directory)
         else:
-            repo_url: str = f"https://github.com/alphagov/{repo_name}.git"
+            repo_url: str = f"https://github.com/Crown-Commercial-Service/{repo_name}.git"
             self.env.run_safe_shell_command(
                 f"git clone {repo_url} {checkout_directory}", self.env.local_repos_directory)
 
