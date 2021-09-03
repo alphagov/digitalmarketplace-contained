@@ -101,10 +101,10 @@ class LocalstackBackendService(BackendService):
 
         localstack_port: int = 4566
 
-        # see https://github.com/alphagov/digitalmarketplace-admin-frontend/blob/main/config.py#L113
+        # see https://github.com/Crown-Commercial-Service/digitalmarketplace-admin-frontend/blob/main/config.py#L113
         dev_bucket_name: str = "digitalmarketplace-dev-uploads"
 
-        # see https://github.com/alphagov/digitalmarketplace-runner/blob/main/config/settings.yml#L17
+        # see https://github.com/Crown-Commercial-Service/digitalmarketplace-runner/blob/main/config/settings.yml#L17
         os.environ["AWS_ACCESS_KEY_ID"] = "test"
         os.environ["AWS_SECRET_ACCESS_KEY"] = "test"
         os.environ["DM_S3_ENDPOINT_PORT"] = str(localstack_port)

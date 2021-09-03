@@ -113,13 +113,13 @@ DMp webpage.
 
 ## Running the functional tests
 
-To run the [functional tests](https://github.com/alphagov/digitalmarketplace-functional-tests) against the environment,
+To run the [functional tests](https://github.com/Crown-Commercial-Service/digitalmarketplace-functional-tests) against the environment,
 you need to:
 - have the `dmp-contained` environment running
-- clone the [functional tests](https://github.com/alphagov/digitalmarketplace-functional-tests) repository and follow
+- clone the [functional tests](https://github.com/Crown-Commercial-Service/digitalmarketplace-functional-tests) repository and follow
 the instructions there. You will need to set `55000` and `55009` as api and search-api ports respectively
   (that is the original ports with an extra `5` at the start) in the
-[configuration file of the functional tests](https://github.com/alphagov/digitalmarketplace-functional-tests/blob/main/config/local.example.sh).
+[configuration file of the functional tests](https://github.com/Crown-Commercial-Service/digitalmarketplace-functional-tests/blob/main/config/local.example.sh).
 
 Those two ports will be proxied to the api apps by nginx. It would have been nice if
 we didn't need this extra step and we could have used the apps ports directly from the host. That may be possible with some
