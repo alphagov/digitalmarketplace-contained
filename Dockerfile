@@ -1,4 +1,4 @@
-FROM python:3.6-slim-buster
+FROM python:3.9-slim-buster
 
 EXPOSE 80
 # these ports are proxied to the api apps (by nginx) as needed by the functional tests
